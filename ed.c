@@ -21,8 +21,16 @@
 //usage:#define ed_trivial_usage "[FILE]"
 //usage:#define ed_full_usage ""
 
-#include "libbb.h"
-#include "common_bufsiz.h"
+//#include "libbb.h"
+//#include "common_bufsiz.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TRUE 1
+#define FALSE 0
+typedef signed char smallint;
 
 typedef struct LINE {
 	struct LINE *next;
@@ -31,15 +39,15 @@ typedef struct LINE {
 	char data[1];
 } LINE;
 
+extern char bb_common_bufsiz1[];
 #define searchString bb_common_bufsiz1
 
 enum {
-	USERSIZE = COMMON_BUFSIZE > 1024 ? 1024
-	         : COMMON_BUFSIZE - 1, /* max line length typed in by user */
+	USERSIZE =  1024, /* max line length typed in by user */
 	INITBUF_SIZE = 1024, /* initial buffer size */
 };
 
-struct globals {
+// struct globals {
 	int curNum;
 	int lastNum;
 	int bufUsed;
@@ -51,7 +59,9 @@ struct globals {
 	LINE lines;
 	smallint dirty;
 	int marks[26];
-};
+// };
+
+/*
 #define G (*ptr_to_globals)
 #define curLine            (G.curLine           )
 #define bufBase            (G.bufBase           )
@@ -68,11 +78,13 @@ struct globals {
 	setup_common_bufsiz(); \
 	SET_PTR_TO_GLOBALS(xzalloc(sizeof(G))); \
 } while (0)
+*/
 
 static int bad_nums(int num1, int num2, const char *for_what)
 {
 	if ((num1 < 1) || (num2 > lastNum) || (num1 > num2)) {
-		bb_error_msg("bad line range for %s", for_what);
+		//bb_error_msg("bad line range for %s", for_what);
+		printf("bad line range for %s", for_what);
 		return 1;
 	}
 	return 0;
@@ -87,7 +99,8 @@ static LINE *findLine(int num)
 	int lnum;
 
 	if ((num < 1) || (num > lastNum)) {
-		bb_error_msg("line number %d does not exist", num);
+		//bb_error_msg("line number %d does not exist", num);
+		printf("line number %d does not exist", num);
 		return NULL;
 	}
 
@@ -155,7 +168,8 @@ static int findString(const LINE *lp, const char *str, int len, int offset)
  * Returns the line number which matches, or 0 if there was no match
  * with an error printed.
  */
-static NOINLINE int searchLines(const char *str, int num1, int num2)
+//static NOINLINE int searchLines(const char *str, int num1, int num2)
+static int searchLines(const char *str, int num1, int num2)
 {
 	const LINE *lp;
 	int len;
@@ -165,7 +179,8 @@ static NOINLINE int searchLines(const char *str, int num1, int num2)
 
 	if (*str == '\0') {
 		if (searchString[0] == '\0') {
-			bb_simple_error_msg("no previous search string");
+			//bb_simple_error_msg("no previous search string");
+			printf("no previous search string");
 			return 0;
 		}
 		str = searchString;
@@ -187,7 +202,8 @@ static NOINLINE int searchLines(const char *str, int num1, int num2)
 		lp = lp->next;
 	}
 
-	bb_error_msg("can't find string \"%s\"", str);
+	//bb_error_msg("can't find string \"%s\"", str);
+	printf("can't find string \"%s\"", str);
 	return 0;
 }
 
@@ -769,7 +785,8 @@ static void subCommand(const char *cmd, int num1, int num2)
 	}
 
 	if (!didSub)
-		bb_error_msg("no substitutions found for \"%s\"", oldStr);
+		//bb_error_msg("no substitutions found for \"%s\"", oldStr);
+		printf("no substitutions found for \"%s\"", oldStr);
 }
 
 /*
