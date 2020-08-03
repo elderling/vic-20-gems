@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
+#include <ctype.h>
 
 #define TRUE 1
 #define FALSE 0
@@ -80,6 +81,9 @@ enum {
 	SET_PTR_TO_GLOBALS(xzalloc(sizeof(G))); \
 } while (0)
 */
+
+//extern char *skip_whitespace(const char *) FAST_FUNC;
+extern char *skip_whitespace(const char *);
 
 static int bad_nums(int num1, int num2, const char *for_what)
 {
@@ -448,7 +452,7 @@ static int readLines(const char *file, int num)
 
 		if (bufUsed >= bufSize) {
 			len = (bufSize * 3) / 2;
-			cp = xrealloc(bufBase, len);
+			cp = realloc(bufBase, len);
 			bufBase = cp;
 			bufPtr = bufBase + bufUsed;
 			bufSize = len;
@@ -758,7 +762,7 @@ static void subCommand(const char *cmd, int num1, int num2)
 		 * structure and use that.  Link it in place of
 		 * the old line structure.
 		 */
-		nlp = xmalloc(sizeof(LINE) + lp->len + deltaLen);
+		nlp = malloc(sizeof(LINE) + lp->len + deltaLen);
 
 		nlp->len = lp->len + deltaLen;
 
@@ -1025,10 +1029,10 @@ static void doCommands(void)
 	}
 }
 
-int ed_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
+//int ed_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
 int ed_main(int argc UNUSED_PARAM, char **argv)
 {
-	INIT_G();
+//	INIT_G();
 
 	bufSize = INITBUF_SIZE;
 	bufBase = xmalloc(bufSize);
