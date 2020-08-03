@@ -384,7 +384,11 @@ static void addLines(int num)
 		 * 0  on ctrl-C,
 		 * >0 length of input string, including terminating '\n'
 		 */
-		len = read_line_input(NULL, "", buf, sizeof(buf));
+
+        // DEFINETELY NEEDED, COMMENTING TO GET COMPILE TO WORK!
+		//len = read_line_input(NULL, "", buf, sizeof(buf));
+        // 
+        //
 		if (len <= 0) {
 			/* Previously, ctrl-C was exiting to shell.
 			 * Now we exit to ed prompt. Is in important? */
@@ -401,6 +405,8 @@ static void addLines(int num)
  * Read lines from a file at the specified line number.
  * Returns TRUE if the file was successfully read.
  */
+
+/* TODO
 static int readLines(const char *file, int num)
 {
 	int fd, cc;
@@ -485,11 +491,14 @@ static int readLines(const char *file, int num)
 
 	return TRUE;
 }
+*/
 
 /*
  * Write the specified lines out to the specified file.
  * Returns TRUE if successful, or FALSE on an error with a message output.
  */
+
+/* TODO
 static int writeLines(const char *file, int num1, int num2)
 {
 	LINE *lp;
@@ -535,6 +544,7 @@ static int writeLines(const char *file, int num1, int num2)
 	printf("%d lines, %d chars\n", lineCount, charCount);
 	return TRUE;
 }
+*/
 
 /*
  * Print lines in a specified range.
@@ -557,7 +567,8 @@ static int printLines(int num1, int num2, int expandFlag)
 
 	while (num1 <= num2) {
 		if (!expandFlag) {
-			write(STDOUT_FILENO, lp->data, lp->len);
+            // TODO: WHAT DO WE DO HERE?
+			//write(STDOUT_FILENO, lp->data, lp->len);
 			setCurNum(num1++);
 			lp = lp->next;
 			continue;
@@ -575,7 +586,8 @@ static int printLines(int num1, int num2, int expandFlag)
 
 		while (count-- > 0) {
 			ch = (unsigned char) *cp++;
-			fputc_printable(ch | PRINTABLE_META, stdout);
+            // FIXME needs to work
+			// fputc_printable(ch | PRINTABLE_META, stdout);
 		}
 
 		fputs("$\n", stdout);
@@ -819,7 +831,10 @@ static void doCommands(void)
 		 * 0  on ctrl-C,
 		 * >0 length of input string, including terminating '\n'
 		 */
-		len = read_line_input(NULL, ": ", buf, sizeof(buf));
+
+        // TODO: This HAS to work eventually
+		// len = read_line_input(NULL, ": ", buf, sizeof(buf));
+        //
 		if (len <= 0)
 			return;
 		while (len && isspace(buf[--len]))
@@ -889,7 +904,7 @@ static void doCommands(void)
 				break;
 			}
 			free(fileName);
-			fileName = xstrdup(cp);
+			fileName = strdup(cp);
 			break;
 
 		case 'i':
@@ -925,7 +940,9 @@ static void doCommands(void)
 			}
 			if (!dirty)
 				return;
-			len = read_line_input(NULL, "Really quit? ", buf, 16);
+            // TODO: This HAS to work eventually
+			// len = read_line_input(NULL, "Really quit? ", buf, 16);
+
 			/* read error/EOF - no way to continue */
 			if (len < 0)
 				return;
@@ -948,10 +965,10 @@ static void doCommands(void)
 			}
 			if (!have1)
 				num1 = lastNum;
-			if (readLines(cp, num1 + 1))
-				break;
+			// if (readLines(cp, num1 + 1))
+		    // break;
 			if (fileName == NULL)
-				fileName = xstrdup(cp);
+				fileName = strdup(cp);
 			break;
 
 		case 's':
@@ -978,7 +995,7 @@ static void doCommands(void)
 				num2 = lastNum;
 				dirty = FALSE;
 			}
-			writeLines(cp, num1, num2);
+			//writeLines(cp, num1, num2);
 			break;
 
 		case 'z':
@@ -1030,18 +1047,20 @@ static void doCommands(void)
 }
 
 //int ed_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
-int ed_main(int argc UNUSED_PARAM, char **argv)
+//int ed_main(int argc UNUSED_PARAM, char **argv)
+int ed_main(int argc, char **argv)
 {
-//	INIT_G();
+	//INIT_G();
 
 	bufSize = INITBUF_SIZE;
-	bufBase = xmalloc(bufSize);
+	bufBase = malloc(bufSize);
 	bufPtr = bufBase;
 	lines.next = &lines;
 	lines.prev = &lines;
 
+    /*
 	if (argv[1]) {
-		fileName = xstrdup(argv[1]);
+		fileName = strdup(argv[1]);
 		if (!readLines(fileName, 1)) {
 			return EXIT_SUCCESS;
 		}
@@ -1049,6 +1068,7 @@ int ed_main(int argc UNUSED_PARAM, char **argv)
 			setCurNum(1);
 		dirty = FALSE;
 	}
+    */
 
 	doCommands();
 	return EXIT_SUCCESS;
