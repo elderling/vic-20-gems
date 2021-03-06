@@ -2,10 +2,12 @@
 
 # define outb(addr,val)        (*(addr) = (val))
 # define inb(addr)             (*(addr))
-# define SCREEN 0x1000
-# define COLOR_START 0x9400  //expanded
+# define SCREEN 0x1000      // expanded
+# define COLOR_START 0x9400  // expanded
 # define COLOR_END 0x97FF
-# define SCREEN_SIZE 22 * 23
+# define SCREEN_WIDTH 22
+# define SCREEN_HEIGHT 23
+# define SCREEN_SIZE SCREEN_WIDTH * SCREEN_HEIGHT
 
 int main (void)
 {
