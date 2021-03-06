@@ -5,23 +5,24 @@
 # define SCREEN 0x1000
 # define COLOR_START 0x9400  //expanded
 # define COLOR_END 0x97FF
+# define SCREEN_SIZE 22 * 23
 
 int main (void)
 {
-  char* screen;
-  char* color;
-  unsigned char x,y;
+  unsigned char* screen;
+  unsigned char* color;
+  unsigned int x,y;
 
   color = (char*) COLOR_START;
   screen = (char*) SCREEN;
 
   
-  for ( y = 0; y < 254; y++ ) {
+  for ( y = 0; y < SCREEN_SIZE; y++ ) {
     color[y] = 2;
   }
 
   for ( y = 1; y = 65; y++) {
-    for( x = 0; x < 254; x++ ) {
+    for( x = 0; x < SCREEN_SIZE; x++ ) {
       screen[x] = y;
     }
   }
