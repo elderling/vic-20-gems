@@ -2,26 +2,29 @@
 
 # define outb(addr,val)        (*(addr) = (val))
 # define inb(addr)             (*(addr))
-# define SCREEN 0x1000
-# define COLOR_START 0x9400  //expanded
+# define SCREEN 0x1000      // expanded
+# define COLOR_START 0x9400  // expanded
 # define COLOR_END 0x97FF
+# define SCREEN_WIDTH 22
+# define SCREEN_HEIGHT 23
+# define SCREEN_SIZE SCREEN_WIDTH * SCREEN_HEIGHT
 
 int main (void)
 {
-  char* screen;
-  char* color;
-  unsigned char x,y;
+  unsigned char* screen;
+  unsigned char* color;
+  unsigned int x,y;
 
   color = (char*) COLOR_START;
   screen = (char*) SCREEN;
 
   
-  for ( y = 0; y < 254; y++ ) {
+  for ( y = 0; y < SCREEN_SIZE; y++ ) {
     color[y] = 2;
   }
 
   for ( y = 1; y = 65; y++) {
-    for( x = 0; x < 254; x++ ) {
+    for( x = 0; x < SCREEN_SIZE; x++ ) {
       screen[x] = y;
     }
   }
