@@ -3,14 +3,16 @@
 //#include <stdlib.h>
 #include <joystick.h>
 
-int say_hello( int num );
-void init_playfield();
-void draw_playfield();
-
 #define PLAYFIELD_X 8
 #define PLAYFIELD_Y 8
 
-char playfield[PLAYFIELD_X][PLAYFIELD_Y] ={ 
+int say_hello( int );
+void init_playfield();
+void draw_playfield( unsigned char [8][8] );
+void clear_groups_of_3_or_more();
+unsigned char clear_jewel( char, char, unsigned char);
+
+unsigned char playfield[PLAYFIELD_X][PLAYFIELD_Y] ={ 
 {'a','b','c','d','e', 'f', 'g', 'h'},
 {'a','b','c','d','e', 'f', 'g', 'h'},
 {'a','b','c','d','e', 'f', 'g', 'h'},
@@ -21,6 +23,8 @@ char playfield[PLAYFIELD_X][PLAYFIELD_Y] ={
 {'a','b','c','d','e', 'f', 'g', 'h'},
 };
 
+unsigned char clear_jewel_tracker[PLAYFIELD_X][PLAYFIELD_Y];
+
 int main(void) {
   unsigned char screen_x;
   unsigned char screen_y;
@@ -29,7 +33,7 @@ int main(void) {
 
   clrscr();
   //init_playfield();
-  draw_playfield();
+  draw_playfield( playfield );
   cprintf("%d, %d", screen_x, screen_y);
   return 0;
 }
@@ -43,7 +47,7 @@ void init_playfield() {
   }
 }
 
-void draw_playfield() {
+void draw_playfield( unsigned char playfield[8][8] ) {
 
   unsigned char x,y;
     for (x = 0; x < PLAYFIELD_X; x++) {
@@ -55,6 +59,23 @@ void draw_playfield() {
   gotoxy(0,19);
   say_hello(1);
   
+}
+
+void clear_groups_of_3_or_more() {
+  signed char x,y;
+  unsigned char current_jewel_color;
+    for (x = 0; x < PLAYFIELD_X; x++) {
+      for (y = 0; y < PLAYFIELD_Y; y++) {
+        current_jewel_color = playfield[x][y];
+        if ( clear_jewel(x,y,current_jewel_color) ) {
+          clear_jewel_tracker[x][y] = 1;
+        }
+      }
+  }
+}
+
+unsigned char clear_jewel( char x, char y, unsigned char color) {
+  return 1;
 }
 
 int say_hello( int num ) {
