@@ -6,9 +6,8 @@
 #define PLAYFIELD_X 8
 #define PLAYFIELD_Y 8
 
-int say_hello( int );
 void init_playfield();
-void draw_playfield( unsigned char [8][8] );
+void draw_playfield( unsigned char [PLAYFIELD_X][PLAYFIELD_Y] );
 void clear_groups_of_3_or_more();
 unsigned char clear_jewel( char, char, unsigned char);
 
@@ -34,6 +33,8 @@ int main(void) {
   clrscr();
   //init_playfield();
   draw_playfield( playfield );
+  gotoxy(0,19);
+  
   cprintf("%d, %d", screen_x, screen_y);
   return 0;
 }
@@ -47,7 +48,7 @@ void init_playfield() {
   }
 }
 
-void draw_playfield( unsigned char playfield[8][8] ) {
+void draw_playfield( unsigned char playfield[PLAYFIELD_X][PLAYFIELD_Y] ) {
 
   unsigned char x,y;
     for (x = 0; x < PLAYFIELD_X; x++) {
@@ -55,10 +56,6 @@ void draw_playfield( unsigned char playfield[8][8] ) {
         cputcxy(x,y, playfield[x][y]);
       }
   }
-
-  gotoxy(0,19);
-  say_hello(1);
-  
 }
 
 void clear_groups_of_3_or_more() {
@@ -76,14 +73,4 @@ void clear_groups_of_3_or_more() {
 
 unsigned char clear_jewel( char x, char y, unsigned char color) {
   return 1;
-}
-
-int say_hello( int num ) {
-  int i;
-  //clrscr();
-  for( i = 0; i < num; i++ ) {
-    cputs("Hello VIC-20!!!\r\n");
-  }
-
-  return 0;
 }
