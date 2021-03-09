@@ -8,6 +8,7 @@
 
 void init_playfield();
 void draw_playfield( unsigned char [PLAYFIELD_X][PLAYFIELD_Y] );
+void init_playfield( unsigned char [PLAYFIELD_X][PLAYFIELD_Y] );
 void clear_groups_of_3_or_more();
 unsigned char clear_jewel( char, char, unsigned char);
 
@@ -31,19 +32,19 @@ int main(void) {
   screensize( &screen_x, &screen_y);
 
   clrscr();
-  //init_playfield();
-  draw_playfield( playfield );
+  init_playfield(clear_jewel_tracker);
+  draw_playfield( clear_jewel_tracker );
   gotoxy(0,19);
   
   cprintf("%d, %d", screen_x, screen_y);
   return 0;
 }
 
-void init_playfield() {
+void init_playfield( unsigned char playfield[PLAYFIELD_X][PLAYFIELD_Y] ) {
   unsigned char x,y;
   for (x = 0; x < PLAYFIELD_X; x++) {
     for (y = 0; y < PLAYFIELD_Y; y++) {
-      playfield[x][y] = 'A';
+      playfield[x][y] = 1;
     }
   }
 }
