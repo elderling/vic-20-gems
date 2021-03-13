@@ -15,8 +15,8 @@ unsigned char up_down_match( char x, char y, unsigned char color);
 unsigned char left_right_match( char x, char y, unsigned char color);
 
 unsigned char playfield[PLAYFIELD_X][PLAYFIELD_Y] ={ 
-{'a','b','c','d','e', 'f', 'g', 'h'},
-{'b','c','d','e','f', 'g', 'h', 'i'},
+{'a','a','a','d','e', 'f', 'g', 'h'},
+{'a','a','a','e','f', 'g', 'h', 'i'},
 {'c','d','e','f','g', 'h', 'i', 'j'},
 {'d','e','f','g','h', 'i', 'j', 'k'},
 {'e','f','g','h','i', 'j', 'k', 'l'},
@@ -35,7 +35,8 @@ int main(void) {
 
   clrscr();
   init_playfield(clear_jewel_tracker);
-  draw_playfield( playfield );
+  clear_groups_of_3_or_more();
+  draw_playfield( clear_jewel_tracker );
   gotoxy(0,19);
   
   cprintf("%d, %d", screen_x, screen_y);
@@ -46,7 +47,7 @@ void init_playfield( unsigned char playfield[PLAYFIELD_X][PLAYFIELD_Y] ) {
   unsigned char x,y;
   for (x = 0; x < PLAYFIELD_X; x++) {
     for (y = 0; y < PLAYFIELD_Y; y++) {
-      playfield[x][y] = 1;
+      playfield[x][y] = '0';
     }
   }
 }
@@ -68,7 +69,7 @@ void clear_groups_of_3_or_more() {
       for (y = 0; y < PLAYFIELD_Y; y++) {
         current_jewel_color = playfield[x][y];
         if ( must_clear_jewel(x,y,current_jewel_color) ) {
-          clear_jewel_tracker[x][y] = 1;
+          clear_jewel_tracker[x][y] = '1';
         }
       }
   }
