@@ -162,7 +162,7 @@ unsigned char double_up_match( char x, char y, unsigned char color) {
 }
 
 unsigned char double_down_match( char x, char y, unsigned char color) {
-  if ( y > PLAYFIELD_Y - 2 ) {
+  if ( y > PLAYFIELD_Y - 3 ) {
     return 0;
   }
 
@@ -185,7 +185,7 @@ unsigned char double_left_match( char x, char y, unsigned char color) {
 }
 
 unsigned char double_right_match( char x, char y, unsigned char color) {
-  if ( x > PLAYFIELD_X - 2 ) {
+  if ( x > PLAYFIELD_X - 3 ) {
     return 0;
   }
 
