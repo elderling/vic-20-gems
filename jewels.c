@@ -185,7 +185,7 @@ unsigned char double_left_match( char x, char y, unsigned char color) {
 }
 
 unsigned char double_right_match( char x, char y, unsigned char color) {
-  if ( y > PLAYFIELD_X - 2 ) {
+  if ( x > PLAYFIELD_X - 2 ) {
     return 0;
   }
 
