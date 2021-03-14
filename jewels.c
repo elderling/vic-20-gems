@@ -43,12 +43,13 @@ int main(void) {
 
   clrscr();
   init_playfield(clear_jewel_tracker);
+  randomize_playfield();
   clear_groups_of_3_or_more();
   draw_playfield( playfield );
   draw_playfield_offset( clear_jewel_tracker );
   gotoxy(0,19);
   
-  random_num = abs(rand() % 4);
+  random_num = abs(rand() % 5);
   cprintf("%d", random_num);
   return 0;
 }
@@ -57,7 +58,7 @@ void randomize_playfield() {
   unsigned char x,y;
   for (x = 0; x < PLAYFIELD_X; x++) {
     for (y = 0; y < PLAYFIELD_Y; y++) {
-      playfield[x][y] = '0';
+      playfield[x][y] = 'a' + abs(rand() % 5);
     }
   }
 }
@@ -161,7 +162,7 @@ unsigned char double_up_match( char x, char y, unsigned char color) {
 }
 
 unsigned char double_down_match( char x, char y, unsigned char color) {
-  if ( y > PLAYFIELD_Y - 3 ) {
+  if ( y > PLAYFIELD_Y - 2 ) {
     return 0;
   }
 
@@ -184,7 +185,7 @@ unsigned char double_left_match( char x, char y, unsigned char color) {
 }
 
 unsigned char double_right_match( char x, char y, unsigned char color) {
-  if ( y > PLAYFIELD_X - 3 ) {
+  if ( y > PLAYFIELD_X - 2 ) {
     return 0;
   }
 
