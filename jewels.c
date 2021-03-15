@@ -20,6 +20,7 @@ unsigned char double_down_match( char x, char y, unsigned char color);
 unsigned char double_left_match( char x, char y, unsigned char color);
 unsigned char double_right_match( char x, char y, unsigned char color);
 void randomize_playfield();
+void remove_jewels();
 
 unsigned char playfield[PLAYFIELD_X][PLAYFIELD_Y] ={ 
 {'a','a','a','d','e', 'f', 'g', 'h'},
@@ -46,10 +47,12 @@ int main(void) {
   randomize_playfield();
   clear_groups_of_3_or_more();
   draw_playfield( playfield );
-  draw_playfield_offset( clear_jewel_tracker );
-  gotoxy(0,19);
+  //draw_playfield_offset( clear_jewel_tracker );
+  remove_jewels();
+  draw_playfield_offset( playfield );
   
   random_num = abs(rand() % 5);
+  gotoxy(0,19);
   cprintf("%d", random_num);
   return 0;
 }
@@ -89,6 +92,27 @@ void draw_playfield( unsigned char playfield[PLAYFIELD_X][PLAYFIELD_Y] ) {
       for (y = 0; y < PLAYFIELD_Y; y++) {
         cputcxy(x,y, playfield[x][y]);
       }
+  }
+}
+
+void remove_jewels() {
+  signed char stack_top, x, y;
+
+  for ( x = 0; x < PLAYFIELD_X; x++ ) {
+    stack_top = PLAYFIELD_Y - 1;
+    for ( y = PLAYFIELD_Y - 1; y >= 0; y-- ) {
+      if ( clear_jewel_tracker[x][y] == '1' ) {
+        continue;
+      }
+      playfield[x][stack_top] = playfield[x][y];
+      //cprintf("%d ", stack_top);
+      stack_top--;
+    }
+
+    for ( y = stack_top; y >= 0; y-- ) {
+      playfield[x][y] = ' ';
+      //cprintf("%d ", y);
+    }
   }
 }
 
