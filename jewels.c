@@ -1,11 +1,13 @@
 #include <vic20.h>
 #include <conio.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <joystick.h>
+#include <peekpoke.h>
 
 #define PLAYFIELD_X 8
 #define PLAYFIELD_Y 8
 #define X_OFFSET 10
+#define RASTER_REGISTER_LO 0x9004
 
 void init_playfield();
 void draw_playfield( unsigned char [PLAYFIELD_X][PLAYFIELD_Y] );
@@ -35,10 +37,12 @@ unsigned char playfield[PLAYFIELD_X][PLAYFIELD_Y] ={
 
 unsigned char clear_jewel_tracker[PLAYFIELD_X][PLAYFIELD_Y];
 
+char raster_rand;
+
 int main(void) {
   unsigned char screen_x;
   unsigned char screen_y;
-  int random_num;
+  //int random_num;
 
   screensize( &screen_x, &screen_y);
 
@@ -51,17 +55,22 @@ int main(void) {
   remove_jewels();
   draw_playfield_offset( playfield );
   
-  random_num = abs(rand() % 5);
+  //random_num = abs(rand() % 5);
   gotoxy(0,19);
-  cprintf("%d", random_num);
+  //cprintf("%d", random_num);
   return 0;
+}
+
+void update_raster_rand() {
+  raster_rand = ((raster_rand >> 7) + raster_rand << 1) ^ PEEK(RASTER_REGISTER_LO);
 }
 
 void randomize_playfield() {
   unsigned char x,y;
   for (x = 0; x < PLAYFIELD_X; x++) {
     for (y = 0; y < PLAYFIELD_Y; y++) {
-      playfield[x][y] = 'a' + abs(rand() % 5);
+      update_raster_rand();
+      playfield[x][y] = 'a' + raster_rand % 5;
     }
   }
 }
