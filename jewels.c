@@ -10,12 +10,13 @@
 #define RASTER_REGISTER_LO 0x9004
 #define NUMBER_OF_JEWELS 7
 #define START_CHAR 'T'
+#define EMPTY_SLOT ' '
 
 void init_playfield();
 void draw_playfield( unsigned char [PLAYFIELD_X][PLAYFIELD_Y] );
 void draw_playfield_offset( unsigned char playfield[PLAYFIELD_X][PLAYFIELD_Y] );
 void init_playfield( unsigned char [PLAYFIELD_X][PLAYFIELD_Y] );
-void find_jewel_matches();
+char find_jewel_matches();
 unsigned char jewel_matches( char, char, unsigned char);
 unsigned char up_down_match( char x, char y, unsigned char color);
 unsigned char left_right_match( char x, char y, unsigned char color);
@@ -40,13 +41,16 @@ unsigned char playfield[PLAYFIELD_X][PLAYFIELD_Y] ={
 unsigned char jewel_match_grid[PLAYFIELD_X][PLAYFIELD_Y];
 
 char raster_rand;
+unsigned int iteration_counter;
 
 int main(void) {
+  iteration_counter = 0;
   clrscr();
   cursor(1);
   gotoxy(0,19);
   cgetc();
   init_playfield(jewel_match_grid);
+  init_playfield(playfield);
   randomize_playfield();
   find_jewel_matches();
   draw_playfield( playfield );
@@ -54,6 +58,7 @@ int main(void) {
   remove_jewels();
   draw_playfield_offset( playfield );
   gotoxy(0,19);
+  cprintf("%d", iteration_counter);
   return 0;
 }
 
@@ -65,8 +70,11 @@ void randomize_playfield() {
   unsigned char x,y;
   for (x = 0; x < PLAYFIELD_X; x++) {
     for (y = 0; y < PLAYFIELD_Y; y++) {
+      do {
       update_raster_rand();
       playfield[x][y] = START_CHAR + raster_rand % NUMBER_OF_JEWELS;
+      } 
+      while ( find_jewel_matches() );
     }
   }
 }
@@ -75,7 +83,7 @@ void init_playfield( unsigned char playfield[PLAYFIELD_X][PLAYFIELD_Y] ) {
   unsigned char x,y;
   for (x = 0; x < PLAYFIELD_X; x++) {
     for (y = 0; y < PLAYFIELD_Y; y++) {
-      playfield[x][y] = '0';
+      playfield[x][y] = EMPTY_SLOT;
     }
   }
 }
@@ -110,28 +118,37 @@ void remove_jewels() {
         continue;
       }
       playfield[x][stack_top] = playfield[x][y];
-      //cprintf("%d ", stack_top);
       stack_top--;
     }
 
     for ( y = stack_top; y >= 0; y-- ) {
-      playfield[x][y] = ' ';
-      //cprintf("%d ", y);
+      playfield[x][y] = EMPTY_SLOT;
     }
   }
 }
 
-void find_jewel_matches() {
+char find_jewel_matches() {
   signed char x,y;
+
+  char found_matches = 0;
+
   unsigned char current_jewel_color;
-    for (x = 0; x < PLAYFIELD_X; x++) {
-      for (y = 0; y < PLAYFIELD_Y; y++) {
-        current_jewel_color = playfield[x][y];
-        if ( jewel_matches(x,y,current_jewel_color) ) {
-          jewel_match_grid[x][y] = '1';
-        }
+
+  for (x = 0; x < PLAYFIELD_X; x++) {
+    for (y = 0; y < PLAYFIELD_Y; y++) {
+      current_jewel_color = playfield[x][y];
+      iteration_counter++;
+      if ( current_jewel_color == EMPTY_SLOT ) { 
+        continue; 
       }
+      if ( jewel_matches(x,y,current_jewel_color) ) {
+        found_matches = 1;
+        jewel_match_grid[x][y] = '1';
+      }
+    }
   }
+
+  return found_matches;
 }
 
 unsigned char jewel_matches( char x, char y, unsigned char color) {
