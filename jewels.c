@@ -8,6 +8,8 @@
 #define PLAYFIELD_Y 8
 #define X_OFFSET 10
 #define RASTER_REGISTER_LO 0x9004
+#define NUMBER_OF_JEWELS 7
+#define START_CHAR 'T'
 
 void init_playfield();
 void draw_playfield( unsigned char [PLAYFIELD_X][PLAYFIELD_Y] );
@@ -64,7 +66,7 @@ void randomize_playfield() {
   for (x = 0; x < PLAYFIELD_X; x++) {
     for (y = 0; y < PLAYFIELD_Y; y++) {
       update_raster_rand();
-      playfield[x][y] = 'a' + raster_rand % 5;
+      playfield[x][y] = START_CHAR + raster_rand % NUMBER_OF_JEWELS;
     }
   }
 }
