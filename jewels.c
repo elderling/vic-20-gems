@@ -15,8 +15,8 @@ void init_playfield();
 void draw_playfield( unsigned char [PLAYFIELD_X][PLAYFIELD_Y] );
 void draw_playfield_offset( unsigned char playfield[PLAYFIELD_X][PLAYFIELD_Y] );
 void init_playfield( unsigned char [PLAYFIELD_X][PLAYFIELD_Y] );
-void clear_groups_of_3_or_more();
-unsigned char must_clear_jewel( char, char, unsigned char);
+void find_jewel_matches();
+unsigned char jewel_matches( char, char, unsigned char);
 unsigned char up_down_match( char x, char y, unsigned char color);
 unsigned char left_right_match( char x, char y, unsigned char color);
 unsigned char double_up_match( char x, char y, unsigned char color);
@@ -37,7 +37,7 @@ unsigned char playfield[PLAYFIELD_X][PLAYFIELD_Y] ={
 {'h','i','j','k','l', 'l', 'l', 'o'},
 };
 
-unsigned char clear_jewel_tracker[PLAYFIELD_X][PLAYFIELD_Y];
+unsigned char jewel_match_grid[PLAYFIELD_X][PLAYFIELD_Y];
 
 char raster_rand;
 
@@ -46,11 +46,11 @@ int main(void) {
   cursor(1);
   gotoxy(0,19);
   cgetc();
-  init_playfield(clear_jewel_tracker);
+  init_playfield(jewel_match_grid);
   randomize_playfield();
-  clear_groups_of_3_or_more();
+  find_jewel_matches();
   draw_playfield( playfield );
-  //draw_playfield_offset( clear_jewel_tracker );
+  //draw_playfield_offset( jewel_match_grid );
   remove_jewels();
   draw_playfield_offset( playfield );
   gotoxy(0,19);
@@ -106,7 +106,7 @@ void remove_jewels() {
   for ( x = 0; x < PLAYFIELD_X; x++ ) {
     stack_top = PLAYFIELD_Y - 1;
     for ( y = PLAYFIELD_Y - 1; y >= 0; y-- ) {
-      if ( clear_jewel_tracker[x][y] == '1' ) {
+      if ( jewel_match_grid[x][y] == '1' ) {
         continue;
       }
       playfield[x][stack_top] = playfield[x][y];
@@ -121,20 +121,20 @@ void remove_jewels() {
   }
 }
 
-void clear_groups_of_3_or_more() {
+void find_jewel_matches() {
   signed char x,y;
   unsigned char current_jewel_color;
     for (x = 0; x < PLAYFIELD_X; x++) {
       for (y = 0; y < PLAYFIELD_Y; y++) {
         current_jewel_color = playfield[x][y];
-        if ( must_clear_jewel(x,y,current_jewel_color) ) {
-          clear_jewel_tracker[x][y] = '1';
+        if ( jewel_matches(x,y,current_jewel_color) ) {
+          jewel_match_grid[x][y] = '1';
         }
       }
   }
 }
 
-unsigned char must_clear_jewel( char x, char y, unsigned char color) {
+unsigned char jewel_matches( char x, char y, unsigned char color) {
   if ( up_down_match( x, y, color) ) {
     return 1;
   }
