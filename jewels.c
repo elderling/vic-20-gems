@@ -40,13 +40,10 @@ unsigned char clear_jewel_tracker[PLAYFIELD_X][PLAYFIELD_Y];
 char raster_rand;
 
 int main(void) {
-  unsigned char screen_x;
-  unsigned char screen_y;
-  //int random_num;
-
-  screensize( &screen_x, &screen_y);
-
   clrscr();
+  cursor(1);
+  gotoxy(0,19);
+  cgetc();
   init_playfield(clear_jewel_tracker);
   randomize_playfield();
   clear_groups_of_3_or_more();
@@ -54,10 +51,7 @@ int main(void) {
   //draw_playfield_offset( clear_jewel_tracker );
   remove_jewels();
   draw_playfield_offset( playfield );
-  
-  //random_num = abs(rand() % 5);
   gotoxy(0,19);
-  //cprintf("%d", random_num);
   return 0;
 }
 
