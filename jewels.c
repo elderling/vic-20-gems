@@ -17,13 +17,13 @@ void draw_playfield(  char [PLAYFIELD_X][PLAYFIELD_Y] );
 void draw_playfield_offset(  char playfield[PLAYFIELD_X][PLAYFIELD_Y] );
 void init_playfield( char [PLAYFIELD_X][PLAYFIELD_Y] );
 char find_jewel_matches();
-char jewel_matches( char, char, char);
-char up_down_match( char x, char y, char color);
-char left_right_match( char x, char y, char color);
-char double_up_match( char x, char y, char color);
-char double_down_match( char x, char y, char color);
-char double_left_match( char x, char y, char color);
-char double_right_match( char x, char y, char color);
+char jewel_matches( signed char, signed char, char);
+char up_down_match( signed char x, signed char y, char color);
+char left_right_match( signed char x, signed char y, char color);
+char double_up_match( signed char x, signed char y, char color);
+char double_down_match( signed char x, signed char y, char color);
+char double_left_match( signed char x, signed char y, char color);
+char double_right_match( signed char x, signed char y, char color);
 void randomize_playfield();
 void remove_jewels();
 
@@ -49,13 +49,13 @@ int main(void) {
   cursor(1);
   gotoxy(0,19);
   cgetc();
-  init_playfield(jewel_match_grid);
+  //init_playfield(jewel_match_grid);
   init_playfield(playfield);
   randomize_playfield();
   find_jewel_matches();
   draw_playfield( playfield );
-  //draw_playfield_offset( jewel_match_grid );
   remove_jewels();
+  //draw_playfield_offset( jewel_match_grid );
   draw_playfield_offset( playfield );
   gotoxy(0,19);
   cprintf("%d", iteration_counter);
@@ -134,6 +134,8 @@ char find_jewel_matches() {
 
   char current_jewel_color;
 
+  init_playfield(jewel_match_grid);
+
   for (x = 0; x < PLAYFIELD_X; x++) {
     for (y = 0; y < PLAYFIELD_Y; y++) {
       current_jewel_color = playfield[x][y];
@@ -151,7 +153,7 @@ char find_jewel_matches() {
   return found_matches;
 }
 
-char jewel_matches( char x, char y, char color) {
+char jewel_matches( signed char x, signed char y, char color) {
   if ( up_down_match( x, y, color) ) {
     return 1;
   }
@@ -176,7 +178,7 @@ char jewel_matches( char x, char y, char color) {
   return 0;
 }
 
-char up_down_match( char x, char y, char color) {
+char up_down_match( signed char x, signed char y, char color) {
   if ( y == 0 || y == PLAYFIELD_Y - 1 ) {
     return 0;
   }
@@ -186,7 +188,7 @@ char up_down_match( char x, char y, char color) {
   return 0;
 }
 
-char left_right_match( char x, char y, char color) {
+char left_right_match( signed char x, signed char y, char color) {
   if ( x == 0 || x == PLAYFIELD_X - 1 ) {
     return 0;
   }
@@ -196,7 +198,7 @@ char left_right_match( char x, char y, char color) {
   return 0;
 }
 
-char double_up_match( char x, char y, char color) {
+char double_up_match( signed char x, signed char y, char color) {
   if ( y < 2 ) {
     return 0;
   }
@@ -207,7 +209,7 @@ char double_up_match( char x, char y, char color) {
   return 0;
 }
 
-char double_down_match( char x, char y, char color) {
+char double_down_match( signed char x, signed char y, char color) {
   if ( y > PLAYFIELD_Y - 3 ) {
     return 0;
   }
@@ -219,7 +221,7 @@ char double_down_match( char x, char y, char color) {
   return 0;
 }
 
-char double_left_match( char x, char y, char color) {
+char double_left_match( signed char x, signed char y, char color) {
   if ( x < 2 ) {
     return 0;
   }
@@ -230,7 +232,7 @@ char double_left_match( char x, char y, char color) {
   return 0;
 }
 
-char double_right_match( char x, char y, char color) {
+char double_right_match( signed char x, signed char y, char color) {
   if ( x > PLAYFIELD_X - 3 ) {
     return 0;
   }
