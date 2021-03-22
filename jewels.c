@@ -67,14 +67,16 @@ void update_raster_rand() {
 }
 
 void randomize_playfield() {
-  char x,y;
+  signed char x,y;
+  char potential_jewel;
   for (x = 0; x < PLAYFIELD_X; x++) {
     for (y = 0; y < PLAYFIELD_Y; y++) {
-      do {
       update_raster_rand();
-      playfield[x][y] = START_CHAR + raster_rand % NUMBER_OF_JEWELS;
+      potential_jewel = START_CHAR + raster_rand % NUMBER_OF_JEWELS;
+      while ( jewel_matches(x,y,potential_jewel) ) {
+        potential_jewel++;
       } 
-      while ( find_jewel_matches() );
+      playfield[x][y] = potential_jewel;
     }
   }
 }
