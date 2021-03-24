@@ -26,6 +26,7 @@ char double_left_match( signed char x, signed char y, char color);
 char double_right_match( signed char x, signed char y, char color);
 void randomize_playfield();
 void remove_jewels();
+void swap_jewels(signed char x1, signed char y1, signed char x2, signed char y2);
 
 char playfield[PLAYFIELD_X][PLAYFIELD_Y] ={ 
 {'a','a','a','d','e', 'f', 'g', 'h'},
@@ -108,6 +109,16 @@ void draw_playfield( char playfield[PLAYFIELD_X][PLAYFIELD_Y] ) {
         cputcxy(x,y, playfield[x][y]);
       }
   }
+}
+
+void swap_jewels(signed char x1, signed char y1, signed char x2, signed char y2) {
+  char temp;
+
+  temp = playfield[x1][y1];
+  playfield[x1][y1] = playfield[x2][y2];
+  playfield[x2][y2] = temp;
+
+  return;
 }
 
 void remove_jewels() {
