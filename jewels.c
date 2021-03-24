@@ -27,6 +27,7 @@ char double_right_match( signed char x, signed char y, char color);
 void randomize_playfield();
 void remove_jewels();
 void swap_jewels(signed char x1, signed char y1, signed char x2, signed char y2);
+char is_valid_move_swap( signed char x_source, signed char y_source, signed char x_destination, signed char y_destination);
 
 char playfield[PLAYFIELD_X][PLAYFIELD_Y] ={ 
 {'a','a','a','d','e', 'f', 'g', 'h'},
@@ -109,6 +110,24 @@ void draw_playfield( char playfield[PLAYFIELD_X][PLAYFIELD_Y] ) {
         cputcxy(x,y, playfield[x][y]);
       }
   }
+}
+
+// Doesn't check that any of the parameters are outside of array boundaries
+char is_valid_move_swap( signed char x_source, signed char y_source, signed char x_destination, signed char y_destination) {
+
+  if ( x_source == x_destination ) {
+     if ( y_destination == y_source + 1 || y_destination == y_source - 1) {
+      return 1;
+     }
+  }
+
+  if ( y_source == y_destination ) {
+     if ( x_destination == x_source + 1 || x_destination == x_source - 1) {
+      return 1;
+     }
+  }
+
+  return 0;
 }
 
 void swap_jewels(signed char x1, signed char y1, signed char x2, signed char y2) {
