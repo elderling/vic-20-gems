@@ -29,28 +29,16 @@ void remove_jewels();
 void swap_jewels(signed char x1, signed char y1, signed char x2, signed char y2);
 char is_valid_move_swap( signed char x_source, signed char y_source, signed char x_destination, signed char y_destination);
 
-char playfield[PLAYFIELD_X][PLAYFIELD_Y] ={ 
-{'a','a','a','d','e', 'f', 'g', 'h'},
-{'a','a','a','e','f', 'g', 'h', 'i'},
-{'c','d','e','f','g', 'h', 'i', 'j'},
-{'d','e','f','g','h', 'i', 'j', 'k'},
-{'e','f','g','h','i', 'j', 'k', 'l'},
-{'f','g','h','i','j', 'l', 'l', 'm'},
-{'g','h','i','j','k', 'l', 'm', 'n'},
-{'h','i','j','k','l', 'l', 'l', 'o'},
-};
-
+char playfield[PLAYFIELD_X][PLAYFIELD_Y];
 char jewel_match_grid[PLAYFIELD_X][PLAYFIELD_Y];
 
 char raster_rand;
-unsigned int iteration_counter;
 
 int main(void) {
-  iteration_counter = 0;
+  char x1,y1,x2,y2;
   clrscr();
   cursor(1);
   gotoxy(0,19);
-  cgetc();
   //init_playfield(jewel_match_grid);
   init_playfield(playfield);
   randomize_playfield();
@@ -60,7 +48,14 @@ int main(void) {
   //draw_playfield_offset( jewel_match_grid );
   draw_playfield_offset( playfield );
   gotoxy(0,19);
-  cprintf("%d", iteration_counter);
+  
+  x1 = cgetc() - 48;
+  y1 = cgetc() - 48;
+  x2 = cgetc() - 48;
+  y2 = cgetc() - 48;
+
+  cprintf("%d,%d,%d,%d\r\n", x1, y1, x2, y2);
+
   return 0;
 }
 
@@ -171,7 +166,6 @@ char find_jewel_matches() {
   for (x = 0; x < PLAYFIELD_X; x++) {
     for (y = 0; y < PLAYFIELD_Y; y++) {
       current_jewel_color = playfield[x][y];
-      iteration_counter++;
       if ( current_jewel_color == EMPTY_SLOT ) { 
         continue; 
       }
