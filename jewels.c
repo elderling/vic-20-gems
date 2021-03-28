@@ -45,8 +45,8 @@ int main(void) {
   find_jewel_matches();
   draw_playfield( playfield );
   remove_jewels();
-  //draw_playfield_offset( jewel_match_grid );
-  draw_playfield_offset( playfield );
+  draw_playfield_offset( jewel_match_grid );
+  //draw_playfield_offset( playfield );
   gotoxy(0,19);
   
   x1 = cgetc() - 48;
@@ -54,7 +54,10 @@ int main(void) {
   x2 = cgetc() - 48;
   y2 = cgetc() - 48;
 
-  cprintf("%d,%d,%d,%d\r\n", x1, y1, x2, y2);
+  cprintf("x1=%d,y1=%d,x2=%d,y2=%d\r\n", x1, y1, x2, y2);
+  swap_jewels(x1,y1,x2,y2);
+  draw_playfield_offset( playfield );
+  gotoxy(0,19);
 
   return 0;
 }
