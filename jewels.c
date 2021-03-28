@@ -56,7 +56,9 @@ int main(void) {
 
   cprintf("x1=%d,y1=%d,x2=%d,y2=%d\r\n", x1, y1, x2, y2);
   swap_jewels(x1,y1,x2,y2);
-  draw_playfield_offset( playfield );
+  draw_playfield( playfield );
+  find_jewel_matches();
+  draw_playfield_offset( jewel_match_grid );
   gotoxy(0,19);
 
   return 0;
