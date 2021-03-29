@@ -47,6 +47,8 @@ int main(void) {
   remove_jewels();
   draw_playfield_offset( jewel_match_grid );
   //draw_playfield_offset( playfield );
+
+  do {
   gotoxy(0,19);
   
   x1 = cgetc() - 48;
@@ -60,6 +62,7 @@ int main(void) {
   find_jewel_matches();
   draw_playfield_offset( jewel_match_grid );
   gotoxy(0,19);
+  } while( x1 < 8 );
 
   return 0;
 }
