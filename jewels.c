@@ -78,7 +78,6 @@ void randomize_playfield() {
     for (y = 0; y < PLAYFIELD_Y; y++) {
       update_raster_rand();
       potential_jewel = START_CHAR + raster_rand % NUMBER_OF_JEWELS;
-      // BUG: Off-by-one error that generates the letter "Z" + 1 as a potential jewel
       while ( jewel_matches(x,y,potential_jewel) ) {
         if ( potential_jewel < (START_CHAR + NUMBER_OF_JEWELS - 2) ) {
           potential_jewel++;
