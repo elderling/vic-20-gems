@@ -9,8 +9,8 @@
 #define X_OFFSET 10
 #define RASTER_REGISTER_LO 0x9004
 #define NUMBER_OF_JEWELS 7
-#define START_CHAR 'T'
-#define EMPTY_SLOT ' '
+#define START_CHAR 1
+#define EMPTY_SLOT 0
 
 void init_playfield();
 void draw_playfield(  char [PLAYFIELD_X][PLAYFIELD_Y] );
@@ -154,7 +154,7 @@ void remove_jewels() {
   for ( x = 0; x < PLAYFIELD_X; x++ ) {
     stack_top = PLAYFIELD_Y - 1;
     for ( y = PLAYFIELD_Y - 1; y >= 0; y-- ) {
-      if ( jewel_match_grid[x][y] == '1' ) {
+      if ( jewel_match_grid[x][y] == 1 ) {
         continue;
       }
       playfield[x][stack_top] = playfield[x][y];
@@ -184,7 +184,7 @@ char find_jewel_matches() {
       }
       if ( jewel_matches(x,y,current_jewel_color) ) {
         found_matches = 1;
-        jewel_match_grid[x][y] = '1';
+        jewel_match_grid[x][y] = 1;
       }
     }
   }
