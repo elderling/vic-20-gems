@@ -11,6 +11,7 @@
 #define NUMBER_OF_JEWELS 7
 #define START_CHAR 1
 #define EMPTY_SLOT 0
+#define PETSCII_FOR_ZERO_CHAR 48
 
 void init_playfield();
 void draw_playfield(  char [PLAYFIELD_X][PLAYFIELD_Y] );
@@ -51,10 +52,10 @@ int main(void) {
   do {
   gotoxy(0,19);
   
-  x1 = cgetc() - 48;
-  y1 = cgetc() - 48;
-  x2 = cgetc() - 48;
-  y2 = cgetc() - 48;
+  x1 = cgetc() - PETSCII_FOR_ZERO_CHAR;
+  y1 = cgetc() - PETSCII_FOR_ZERO_CHAR;
+  x2 = cgetc() - PETSCII_FOR_ZERO_CHAR;
+  y2 = cgetc() - PETSCII_FOR_ZERO_CHAR;
 
   cprintf("x1=%d,y1=%d,x2=%d,y2=%d\r\n", x1, y1, x2, y2);
   swap_jewels(x1,y1,x2,y2);
@@ -105,7 +106,7 @@ void draw_playfield_offset( char playfield[PLAYFIELD_X][PLAYFIELD_Y] ) {
   char x,y;
     for (x = 0; x < PLAYFIELD_X; x++) {
       for (y = 0; y < PLAYFIELD_Y; y++) {
-        cputcxy(x + X_OFFSET,y, playfield[x][y]);
+        cputcxy(x + X_OFFSET,y, playfield[x][y] + PETSCII_FOR_ZERO_CHAR);
       }
   }
 }
@@ -115,7 +116,7 @@ void draw_playfield( char playfield[PLAYFIELD_X][PLAYFIELD_Y] ) {
   char x,y;
     for (x = 0; x < PLAYFIELD_X; x++) {
       for (y = 0; y < PLAYFIELD_Y; y++) {
-        cputcxy(x,y, playfield[x][y]);
+        cputcxy(x,y, playfield[x][y] + PETSCII_FOR_ZERO_CHAR);
       }
   }
 }
