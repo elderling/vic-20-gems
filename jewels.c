@@ -14,8 +14,7 @@
 #define PETSCII_FOR_ZERO_CHAR 48
 
 void init_playfield();
-void draw_playfield(  char [PLAYFIELD_X][PLAYFIELD_Y] );
-void draw_playfield_offset(  char playfield[PLAYFIELD_X][PLAYFIELD_Y] );
+void draw_playfield_offset(  char playfield[PLAYFIELD_X][PLAYFIELD_Y], char x_offset, char y_offset );
 void init_playfield( char [PLAYFIELD_X][PLAYFIELD_Y] );
 char find_jewel_matches();
 char jewel_matches( signed char, signed char, char);
@@ -44,10 +43,9 @@ int main(void) {
   init_playfield(playfield);
   randomize_playfield();
   find_jewel_matches();
-  draw_playfield( playfield );
+  draw_playfield_offset( playfield, 0, 0 );
   remove_jewels();
-  draw_playfield_offset( jewel_match_grid );
-  //draw_playfield_offset( playfield );
+  draw_playfield_offset( jewel_match_grid, 10, 0 );
 
   do {
   gotoxy(0,19);
@@ -59,9 +57,9 @@ int main(void) {
 
   cprintf("x1=%d,y1=%d,x2=%d,y2=%d\r\n", x1, y1, x2, y2);
   swap_jewels(x1,y1,x2,y2);
-  draw_playfield( playfield );
+  draw_playfield_offset( playfield, 0, 0 );
   find_jewel_matches();
-  draw_playfield_offset( jewel_match_grid );
+  draw_playfield_offset( jewel_match_grid, 10, 0 );
   gotoxy(0,19);
   } while( x1 < 8 );
 
@@ -101,22 +99,12 @@ void init_playfield( char playfield[PLAYFIELD_X][PLAYFIELD_Y] ) {
   }
 }
 
-void draw_playfield_offset( char playfield[PLAYFIELD_X][PLAYFIELD_Y] ) {
+void draw_playfield_offset( char playfield[PLAYFIELD_X][PLAYFIELD_Y], char x_offset, char y_offset ) {
 
   char x,y;
     for (x = 0; x < PLAYFIELD_X; x++) {
       for (y = 0; y < PLAYFIELD_Y; y++) {
-        cputcxy(x + X_OFFSET,y, playfield[x][y] + PETSCII_FOR_ZERO_CHAR);
-      }
-  }
-}
-
-void draw_playfield( char playfield[PLAYFIELD_X][PLAYFIELD_Y] ) {
-
-  char x,y;
-    for (x = 0; x < PLAYFIELD_X; x++) {
-      for (y = 0; y < PLAYFIELD_Y; y++) {
-        cputcxy(x,y, playfield[x][y] + PETSCII_FOR_ZERO_CHAR);
+        cputcxy(x + x_offset, y + y_offset, playfield[x][y] + PETSCII_FOR_ZERO_CHAR);
       }
   }
 }
