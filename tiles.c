@@ -45,7 +45,7 @@ int main (void)
   }
   */
 
-  draw_tile( 1, 1, 0);
+  draw_tile( 1, 1, 1);
 
   return 0;
 }
@@ -62,7 +62,13 @@ void draw_tile( char x, char y, char tile ) {
   screen = (char*) SCREEN;
 
   color[offset] = 2; // red
-  screen[offset] = tiles[0][0];
+  screen[offset] = tiles[tile][0];
+  color[offset + 1] = 2;
+  screen[offset + 1] = tiles[tile][1];
+  color[offset + SCREEN_WIDTH] = 2;
+  screen[offset + SCREEN_WIDTH] = tiles[tile][2];
+  color[offset + SCREEN_WIDTH + 1] = 2;
+  screen[offset + SCREEN_WIDTH + 1] = tiles[tile][3];
 
   return;
 }
