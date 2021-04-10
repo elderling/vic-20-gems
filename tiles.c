@@ -45,7 +45,7 @@ int main (void)
   }
   */
 
-  draw_tile( 0, 0, 0);
+  draw_tile( 1, 1, 0);
 
   return 0;
 }
@@ -68,5 +68,10 @@ void draw_tile( char x, char y, char tile ) {
 }
 
 unsigned int calculate_offset( char x, char y ) {
-  return 0;
+
+  unsigned int offset;
+
+  offset = x + y * SCREEN_WIDTH;
+
+  return offset;
 }
