@@ -9,6 +9,9 @@
 # define SCREEN_HEIGHT 23
 # define SCREEN_SIZE SCREEN_WIDTH * SCREEN_HEIGHT
 
+void draw_tile( char x, char y, char tile );
+unsigned int calculate_offset( char x, char y );
+
 char tiles[8][4] = {
   "0000",
   "1111",
@@ -22,6 +25,7 @@ char tiles[8][4] = {
 
 int main (void)
 {
+  /*
   unsigned char* screen;
   unsigned char* color;
   unsigned int x,y;
@@ -39,8 +43,30 @@ int main (void)
       screen[x] = y;
     }
   }
+  */
+
+  draw_tile( 0, 0, 0);
 
   return 0;
 }
 
+void draw_tile( char x, char y, char tile ) {
 
+  unsigned int offset;
+  unsigned char* screen;
+  unsigned char* color;
+
+  offset = calculate_offset( x, y );
+
+  color = (char*) COLOR_START;
+  screen = (char*) SCREEN;
+
+  color[offset] = 2; // red
+  screen[offset] = tiles[0][0];
+
+  return;
+}
+
+unsigned int calculate_offset( char x, char y ) {
+  return 0;
+}
