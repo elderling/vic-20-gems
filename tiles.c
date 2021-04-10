@@ -25,27 +25,13 @@ char tiles[8][4] = {
 
 int main (void)
 {
-  /*
-  unsigned char* screen;
-  unsigned char* color;
-  unsigned int x,y;
-
-  color = (char*) COLOR_START;
-  screen = (char*) SCREEN;
-
   
-  for ( y = 0; y < SCREEN_SIZE; y++ ) {
-    color[y] = 2;
-  }
-
-  for ( y = 1; y = 65; y++) {
-    for( x = 0; x < SCREEN_SIZE; x++ ) {
-      screen[x] = y;
+  char i,j;
+  for( i = 0; i < 16; i = i + 2 ) {
+    for( j = 0; j < 16; j = j + 2) {
+      draw_tile( i, j, i / 2 );
     }
   }
-  */
-
-  draw_tile( 1, 1, 1);
 
   return 0;
 }
