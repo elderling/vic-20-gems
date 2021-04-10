@@ -23,6 +23,10 @@ char tiles[8][4] = {
   "7777"
 };
 
+char tile_colors[8] = {
+  0,1,2,3,4,5,6,7
+};
+
 int main (void)
 {
   
@@ -47,13 +51,13 @@ void draw_tile( char x, char y, char tile ) {
   color = (char*) COLOR_START;
   screen = (char*) SCREEN;
 
-  color[offset] = 2; // red
+  color[offset] = tile_colors[tile];
   screen[offset] = tiles[tile][0];
-  color[offset + 1] = 2;
+  color[offset + 1] = tile_colors[tile];
   screen[offset + 1] = tiles[tile][1];
-  color[offset + SCREEN_WIDTH] = 2;
+  color[offset + SCREEN_WIDTH] = tile_colors[tile];
   screen[offset + SCREEN_WIDTH] = tiles[tile][2];
-  color[offset + SCREEN_WIDTH + 1] = 2;
+  color[offset + SCREEN_WIDTH + 1] = tile_colors[tile];
   screen[offset + SCREEN_WIDTH + 1] = tiles[tile][3];
 
   return;
