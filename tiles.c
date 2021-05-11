@@ -1,8 +1,8 @@
 #include <vic20.h>
 #include <peekpoke.h>
+#include "tiles.h"
 
-# define outb(addr,val)        (*(addr) = (val))
-# define inb(addr)             (*(addr))
+/*
 # define SCREEN 0x1000      // expanded
 # define COLOR_START 0x9400  // expanded
 # define COLOR_END 0x97FF
@@ -13,6 +13,7 @@
 # define VID_RAM_LAYOUT_REG 0x9005
 
 void draw_tile( char x, char y, char tile );
+*/
 
 char tiles[8][4] = {
   0xe9,0xdf,0x5f,0x69,

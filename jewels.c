@@ -67,14 +67,19 @@ int main(void) {
   y2 = cgetc() - PETSCII_FOR_ZERO_CHAR;
 
   cprintf("x1=%d,y1=%d,x2=%d,y2=%d\r\n", x1, y1, x2, y2);
+  offset.x = 0;
+  offset.y = 0;
+  draw_playfield_offset( playfield, &offset );
   swap_jewels(x1,y1,x2,y2);
   offset.x = 0;
   offset.y = 0;
   draw_playfield_offset( playfield, &offset );
   find_jewel_matches();
-  offset.x = 10;
+  remove_jewels();
+  randomize_playfield();
+  offset.x = 0;
   offset.y = 0;
-  draw_playfield_offset( jewel_match_grid, &offset );
+  draw_playfield_offset( playfield, &offset );
   gotoxy(0,19);
   } while( x1 < 8 );
 
@@ -90,6 +95,9 @@ void randomize_playfield() {
   char potential_jewel;
   for (x = 0; x < PLAYFIELD_X; x++) {
     for (y = 0; y < PLAYFIELD_Y; y++) {
+      if (playfield[x][y] != EMPTY_SLOT ) {
+        continue;
+      }
       update_raster_rand();
       potential_jewel = START_CHAR + raster_rand % NUMBER_OF_JEWELS;
       while ( jewel_matches(x,y,potential_jewel) ) {
