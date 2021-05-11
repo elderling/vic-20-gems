@@ -13,8 +13,13 @@
 #define EMPTY_SLOT 0
 #define PETSCII_FOR_ZERO_CHAR 48
 
+struct coordinate {
+  signed char x;
+  signed char y;
+};
+
 void init_playfield();
-void draw_playfield_offset(  char playfield[PLAYFIELD_X][PLAYFIELD_Y], char x_offset, char y_offset );
+void draw_playfield_offset(  char playfield[PLAYFIELD_X][PLAYFIELD_Y], struct coordinate *offset );
 void init_playfield( char [PLAYFIELD_X][PLAYFIELD_Y] );
 char find_jewel_matches();
 char jewel_matches( signed char, signed char, char);
@@ -35,6 +40,8 @@ char jewel_match_grid[PLAYFIELD_X][PLAYFIELD_Y];
 char raster_rand;
 
 int main(void) {
+
+  struct coordinate offset;
   char x1,y1,x2,y2;
   clrscr();
   cursor(1);
@@ -43,9 +50,13 @@ int main(void) {
   init_playfield(playfield);
   randomize_playfield();
   find_jewel_matches();
-  draw_playfield_offset( playfield, 0, 0 );
+  offset.x = 0;
+  offset.y = 0;
+  draw_playfield_offset( playfield, &offset );
   remove_jewels();
-  draw_playfield_offset( jewel_match_grid, 10, 0 );
+  offset.x = 10;
+  offset.y = 0;
+  draw_playfield_offset( jewel_match_grid, &offset );
 
   do {
   gotoxy(0,19);
@@ -57,9 +68,13 @@ int main(void) {
 
   cprintf("x1=%d,y1=%d,x2=%d,y2=%d\r\n", x1, y1, x2, y2);
   swap_jewels(x1,y1,x2,y2);
-  draw_playfield_offset( playfield, 0, 0 );
+  offset.x = 0;
+  offset.y = 0;
+  draw_playfield_offset( playfield, &offset );
   find_jewel_matches();
-  draw_playfield_offset( jewel_match_grid, 10, 0 );
+  offset.x = 10;
+  offset.y = 0;
+  draw_playfield_offset( jewel_match_grid, &offset );
   gotoxy(0,19);
   } while( x1 < 8 );
 
@@ -99,12 +114,12 @@ void init_playfield( char playfield[PLAYFIELD_X][PLAYFIELD_Y] ) {
   }
 }
 
-void draw_playfield_offset( char playfield[PLAYFIELD_X][PLAYFIELD_Y], char x_offset, char y_offset ) {
+void draw_playfield_offset( char playfield[PLAYFIELD_X][PLAYFIELD_Y], struct coordinate *offset ) {
 
   char x,y;
     for (x = 0; x < PLAYFIELD_X; x++) {
       for (y = 0; y < PLAYFIELD_Y; y++) {
-        cputcxy(x + x_offset, y + y_offset, playfield[x][y] + PETSCII_FOR_ZERO_CHAR);
+        cputcxy(x + offset->x, y + offset->y, playfield[x][y] + PETSCII_FOR_ZERO_CHAR);
       }
   }
 }
