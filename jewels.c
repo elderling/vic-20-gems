@@ -45,6 +45,7 @@ int main(void) {
   char x1,y1,x2,y2;
   clrscr();
   cursor(1);
+  bgcolor(14);
   gotoxy(0,19);
   //init_playfield(jewel_match_grid);
   init_playfield(playfield);
@@ -127,6 +128,7 @@ void draw_playfield_offset( char playfield[PLAYFIELD_X][PLAYFIELD_Y], struct coo
   char x,y;
     for (x = 0; x < PLAYFIELD_X; x++) {
       for (y = 0; y < PLAYFIELD_Y; y++) {
+        textcolor(playfield[x][y]);
         cputcxy(x + offset->x, y + offset->y, playfield[x][y] + PETSCII_FOR_ZERO_CHAR);
       }
   }
