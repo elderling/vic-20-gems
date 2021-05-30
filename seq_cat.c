@@ -2,7 +2,7 @@
 #include <cbm.h>
 
 int main() {
-  unsigned char i,lfn, open_result, chkin_result, foo, data;
+  unsigned char lfn, open_result, chkin_result, bytes_read, data;
 
   const unsigned char* name = "advent-20-01,s,r";
   printf("'%s'", name);
@@ -20,10 +20,16 @@ int main() {
 
   printf("chkin_result = '%d'", chkin_result);
 
-  for ( i = 0; i < 254; i++ ) {
-    foo = cbm_read( lfn, &data, 1);
-    printf("%x,", data);
+  do {
+    bytes_read = cbm_read( lfn, &data, 1);
+    if ( data == 0x0d ) {
+        printf("\n");
+    }
+    else {
+      printf("%c", data);
+    }
   }
+  while ( bytes_read > 0 );
 
   cbm_k_close( lfn );
 
