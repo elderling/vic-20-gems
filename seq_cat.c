@@ -8,6 +8,7 @@ int main() {
   unsigned char** endptr;
   long int the_actual_number;
   long int the_long_total = 0;
+  int total_lines_read = 0;
 
   const unsigned char* name = "advent-20-01,s,r";
   printf("'%s'", name);
@@ -39,6 +40,7 @@ int main() {
           the_actual_number = strtol(number_string, endptr, 0);
 
           the_long_total += the_actual_number;
+          total_lines_read++;
           printf("%ld\n", the_actual_number);
 
           string_position = 0;
@@ -57,6 +59,7 @@ int main() {
   printf("\n");
   printf("'%s'", name);
   printf("The Long Total = %ld", the_long_total);
+  printf("Total lines read = %d", total_lines_read);
 
   return 0;
 }
