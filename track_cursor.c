@@ -9,17 +9,19 @@
 #define SPACE 0x20
 
 struct coordinate {
-  unsigned char x;
-  unsigned char y;
+  signed char x;
+  signed char y;
 };
 
-struct coordinate read_cursor_delta(); 
+void update_cursor(); 
 
 struct coordinate the_cursor;
 
-int main() {
-  struct coordinate the_delta;
+unsigned char screensize_x, screensize_y;
 
+int main() {
+
+  screensize( &screensize_x, &screensize_y );
   clrscr();
   gotoxy( 0, 0 );
   cursor(1);
@@ -27,36 +29,33 @@ int main() {
   the_cursor.y = 0;
 
   while (1) {
-    the_delta = read_cursor_delta();
-    the_cursor.x += the_delta.x;
-    the_cursor.y += the_delta.y;
-    gotoxy( the_cursor.x, the_cursor.y );
+    update_cursor();
   }
 
   return 0;
 }
 
-struct coordinate read_cursor_delta() {
+void update_cursor() {
   unsigned char keystroke;
-  struct coordinate the_delta;
-
-  the_delta.x = 0;
-  the_delta.y = 0;
 
   keystroke = cgetc();
 
-  if ( keystroke == CURSOR_UP ) {
-    the_delta.y = -1;
+  if ( keystroke == CURSOR_UP && the_cursor.y != 0 ) {
+    the_cursor.y--;
   }
-  else if ( keystroke == CURSOR_DOWN ) {
-    the_delta.y = 1;
+  else if ( keystroke == CURSOR_DOWN && the_cursor.y != screensize_y - 1) {
+    the_cursor.y++;
   }
-  else if ( keystroke == CURSOR_LEFT ) {
-    the_delta.x = -1;
+  else if ( keystroke == CURSOR_LEFT && the_cursor.x != 0 ) {
+    the_cursor.x--;
   }
-  else if ( keystroke == CURSOR_RIGHT ) {
-    the_delta.x = 1;
+  else if ( keystroke == CURSOR_RIGHT && the_cursor.x != screensize_x - 1 ) {
+    the_cursor.x++;
   }
 
-  return the_delta;
+  gotoxy(0, screensize_y - 1);
+  cprintf("x=%d,y=%d", the_cursor.x, the_cursor.y);
+  gotoxy( the_cursor.x, the_cursor.y );
+
+  return;
 } 
