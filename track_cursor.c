@@ -13,13 +13,15 @@ struct coordinate {
   signed char y;
 };
 
-void update_cursor(); 
+void update_cursor( unsigned char keystroke ); 
 
 struct coordinate the_cursor;
 
 unsigned char screensize_x, screensize_y;
 
 int main() {
+
+  unsigned char keystroke;
 
   screensize( &screensize_x, &screensize_y );
   clrscr();
@@ -29,16 +31,14 @@ int main() {
   the_cursor.y = 0;
 
   while (1) {
-    update_cursor();
+    keystroke = cgetc();
+    update_cursor( keystroke );
   }
 
   return 0;
 }
 
-void update_cursor() {
-  unsigned char keystroke;
-
-  keystroke = cgetc();
+void update_cursor(unsigned char keystroke) {
 
   if ( keystroke == CURSOR_UP && the_cursor.y != 0 ) {
     the_cursor.y--;
