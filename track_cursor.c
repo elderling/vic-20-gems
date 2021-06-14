@@ -54,7 +54,7 @@ void update_cursor(unsigned char keystroke) {
   }
 
   gotoxy(0, screensize_y - 1);
-  cprintf("x=%d,y=%d", the_cursor.x, the_cursor.y);
+  cprintf("x=%2d,y=%2d", the_cursor.x, the_cursor.y);
   gotoxy( the_cursor.x, the_cursor.y );
 
   return;
