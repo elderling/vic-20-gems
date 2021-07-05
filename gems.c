@@ -1,23 +1,29 @@
 #include <vic20.h>
 #include <conio.h>
 
+#define EMPTY_SLOT 0
 #define PLAYFIELD_X 8
 #define PLAYFIELD_Y 8
 #define CURSOR_UP 0x91
 #define CURSOR_DOWN 0x11
 #define CURSOR_LEFT 0x9d
 #define CURSOR_RIGHT 0x1d
+#define PETSCII_FOR_ZERO_CHAR 48
 
 void initialize_display();
 void initialize_game_state();
+void initialize_playfield();
 void render_display();
 char get_command();
 void do_command(char command);
+void draw_playfield();
 
 struct coordinate {
   char x;
   char y;
 };
+
+char playfield[PLAYFIELD_X][PLAYFIELD_Y];
 
 struct coordinate game_cursor;
 
@@ -25,6 +31,7 @@ int main() {
 
   initialize_display();
   initialize_game_state();
+  initialize_playfield();
   render_display();
 
   while (1) {
@@ -52,7 +59,9 @@ void initialize_game_state() {
 }
 
 void render_display() {
+  draw_playfield();
   gotoxy(0, PLAYFIELD_Y);
+  textcolor(0);
   cprintf("x=%2d,y=%2d", game_cursor.x, game_cursor.y);
   gotoxy( game_cursor.x, game_cursor.y );
 }
@@ -77,4 +86,24 @@ void do_command(char command) {
   }
 
   return;
+}
+
+void initialize_playfield() {
+  char x,y;
+  for (x = 0; x < PLAYFIELD_X; x++) {
+    for (y = 0; y < PLAYFIELD_Y; y++) {
+      playfield[x][y] = EMPTY_SLOT;
+    }
+  }
+}
+
+void draw_playfield() {
+
+  char x,y;
+    for (x = 0; x < PLAYFIELD_X; x++) {
+      for (y = 0; y < PLAYFIELD_Y; y++) {
+        textcolor(playfield[x][y]);
+        cputcxy(x, y, playfield[x][y] + PETSCII_FOR_ZERO_CHAR);
+      }
+  }
 }
