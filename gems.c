@@ -62,6 +62,8 @@ void initialize_display() {
 
   clrscr();
   gotoxy( 0, 0 );
+  bgcolor( COLOR_BLACK );
+  bordercolor( COLOR_BLACK );
   cursor(1);
 
   return;
@@ -77,7 +79,7 @@ void initialize_game_state() {
 void render_display() {
   draw_playfield();
   gotoxy(0, PLAYFIELD_Y);
-  textcolor(0);
+  textcolor( COLOR_WHITE );
   cprintf("x=%2d,y=%2d", game_cursor.x, game_cursor.y);
   gotoxy( game_cursor.x, game_cursor.y );
 }
