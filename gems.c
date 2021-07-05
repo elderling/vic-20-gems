@@ -182,7 +182,7 @@ char double_up_match( struct coordinate *gem_location, char gem) {
   char x = gem_location->x;
   char y = gem_location->y;
 
-  if ( y >= PLAYFIELD_Y - 2  ) {
+  if ( y > PLAYFIELD_Y - 3  ) {
     return 0;
   }
   if ( playfield[x][y+1] == gem && playfield[x][y+2] == gem ) {
@@ -200,7 +200,7 @@ char double_down_match( struct coordinate *gem_location, char gem ) {
     return 0;
   }
 
-  if ( playfield[x][y + 1] == gem && playfield[x][y+2] == gem ) {
+  if ( playfield[x][y-1] == gem && playfield[x][y-2] == gem ) {
     return 1;
   }
 
@@ -254,12 +254,10 @@ void randomize_playfield() {
       gem_location.x = x;
       gem_location.y = y;
       while ( gem_matches(&gem_location, potential_gem) ) {
-        if ( potential_gem < (START_CHAR + NUMBER_OF_GEMS - 2) ) {
           potential_gem++;
-        }
-        else {
-          potential_gem = START_CHAR;
-        }
+          if ( potential_gem > ( START_CHAR + NUMBER_OF_GEMS - 1 )) {
+            potential_gem = START_CHAR;
+          }
       } 
       playfield[x][y] = potential_gem;
     }
