@@ -1,5 +1,6 @@
 #include <vic20.h>
 #include <conio.h>
+#include <peekpoke.h>
 
 #define EMPTY_SLOT 0
 #define PLAYFIELD_X 8
@@ -8,7 +9,15 @@
 #define CURSOR_DOWN 0x11
 #define CURSOR_LEFT 0x9d
 #define CURSOR_RIGHT 0x1d
+#define NUMBER_OF_GEMS 7
 #define PETSCII_FOR_ZERO_CHAR 48
+#define RASTER_REGISTER_LO 0x9004
+#define START_CHAR 1
+
+struct coordinate {
+  char x;
+  char y;
+};
 
 void initialize_display();
 void initialize_game_state();
@@ -17,11 +26,17 @@ void render_display();
 char get_command();
 void do_command(char command);
 void draw_playfield();
+char up_down_match( struct coordinate *gem_location, char gem );
+char left_right_match( struct coordinate *gem_location, char gem );
+char double_down_match( struct coordinate *gem_location, char gem );
+char double_up_match( struct coordinate *gem_location, char gem );
+char double_left_match( struct coordinate *gem_location, char gem );
+char double_right_match( struct coordinate *gem_location, char gem );
+char gem_matches( struct coordinate *gem_location, char gem);
+void update_raster_rand();
+void randomize_playfield();
 
-struct coordinate {
-  char x;
-  char y;
-};
+char raster_rand;
 
 char playfield[PLAYFIELD_X][PLAYFIELD_Y];
 
@@ -32,6 +47,7 @@ int main() {
   initialize_display();
   initialize_game_state();
   initialize_playfield();
+  randomize_playfield();
   render_display();
 
   while (1) {
@@ -105,5 +121,145 @@ void draw_playfield() {
         textcolor(playfield[x][y]);
         cputcxy(x, y, playfield[x][y] + PETSCII_FOR_ZERO_CHAR);
       }
+  }
+}
+
+char gem_matches( struct coordinate *gem_location, char gem) {
+  if ( up_down_match( gem_location, gem) ) {
+    return 1;
+  }
+  if ( left_right_match( gem_location, gem) ) {
+    return 1;
+  }
+  if (up_down_match( gem_location, gem) ) {
+    return 1;
+  }
+  if (double_left_match( gem_location, gem) ) {
+    return 1;
+  }
+  if (double_right_match( gem_location, gem) ) {
+    return 1;
+  }
+  if (double_up_match( gem_location, gem) ) {
+    return 1;
+  }
+  if (double_down_match( gem_location, gem) ) {
+    return 1;
+  }
+  return 0;
+}
+
+char up_down_match( struct coordinate *gem_location, char gem ) {
+  char x = gem_location->x;
+  char y = gem_location->y;
+  if ( y == 0 || y == PLAYFIELD_Y - 1 ) {
+    return 0;
+  }
+  if ( playfield[x][y-1] == gem && playfield[x][y+1] == gem ) {
+    return 1;
+  }
+
+  return 0;
+}
+
+char left_right_match( struct coordinate *gem_location, char gem) {
+  char x = gem_location->x;
+  char y = gem_location->y;
+
+  if ( x == 0 || y == PLAYFIELD_X - 1 ) {
+    return 0;
+  }
+  if ( playfield[x-1][y] == gem && playfield[x+1][y] == gem ) {
+    return 1;
+  }
+
+  return 0;
+}
+
+char double_up_match( struct coordinate *gem_location, char gem) {
+  char x = gem_location->x;
+  char y = gem_location->y;
+
+  if ( y >= PLAYFIELD_Y - 2  ) {
+    return 0;
+  }
+  if ( playfield[x][y+1] == gem && playfield[x][y+2] == gem ) {
+    return 1;
+  }
+
+  return 0;
+}
+
+char double_down_match( struct coordinate *gem_location, char gem ) {
+  char x = gem_location->x;
+  char y = gem_location->y;
+
+  if ( y < 2 ) {
+    return 0;
+  }
+
+  if ( playfield[x][y + 1] == gem && playfield[x][y+2] == gem ) {
+    return 1;
+  }
+
+  return 0;
+}
+
+char double_left_match( struct coordinate *gem_location, char gem) {
+  char x = gem_location->x;
+  char y = gem_location->y;
+
+  if ( x < 2 ) {
+    return 0;
+  }
+  if ( playfield[x-1][y] == gem && playfield[x-2][y] == gem ) {
+    return 1;
+  }
+
+  return 0;
+}
+
+char double_right_match( struct coordinate *gem_location, char gem) {
+  char x = gem_location->x;
+  char y = gem_location->y;
+
+  if ( x > PLAYFIELD_X - 3 ) {
+    return 0;
+  }
+
+  if ( playfield[x+1][y] == gem && playfield[x+2][y] == gem ) {
+    return 1;
+  }
+
+  return 0;
+}
+
+void update_raster_rand() {
+  raster_rand = ((raster_rand >> 7) + raster_rand << 1) ^ PEEK(RASTER_REGISTER_LO);
+}
+
+void randomize_playfield() {
+  char x,y;
+  char potential_gem;
+  struct coordinate gem_location;
+  for (x = 0; x < PLAYFIELD_X; x++) {
+    for (y = 0; y < PLAYFIELD_Y; y++) {
+      if (playfield[x][y] != EMPTY_SLOT ) {
+        continue;
+      }
+      update_raster_rand();
+      potential_gem = START_CHAR + raster_rand % NUMBER_OF_GEMS;
+      gem_location.x = x;
+      gem_location.y = y;
+      while ( gem_matches(&gem_location, potential_gem) ) {
+        if ( potential_gem < (START_CHAR + NUMBER_OF_GEMS - 2) ) {
+          potential_gem++;
+        }
+        else {
+          potential_gem = START_CHAR;
+        }
+      } 
+      playfield[x][y] = potential_gem;
+    }
   }
 }
