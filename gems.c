@@ -19,13 +19,13 @@ struct coordinate {
   char y;
 };
 
-void initialize_display();
-void initialize_game_state();
-void initialize_playfield();
-void render_display();
-char get_command();
+void initialize_display(void);
+void initialize_game_state(void);
+void initialize_playfield(void);
+void render_display(void);
+char get_command(void);
 void do_command(char command);
-void draw_playfield();
+void draw_playfield(void);
 char up_down_match( struct coordinate *gem_location, char gem );
 char left_right_match( struct coordinate *gem_location, char gem );
 char double_down_match( struct coordinate *gem_location, char gem );
@@ -33,8 +33,8 @@ char double_up_match( struct coordinate *gem_location, char gem );
 char double_left_match( struct coordinate *gem_location, char gem );
 char double_right_match( struct coordinate *gem_location, char gem );
 char gem_matches( struct coordinate *gem_location, char gem);
-void update_raster_rand();
-void randomize_playfield();
+void update_raster_rand(void);
+void randomize_playfield(void);
 
 char raster_rand;
 
