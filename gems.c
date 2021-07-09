@@ -9,6 +9,7 @@
 #define CURSOR_DOWN 0x11
 #define CURSOR_LEFT 0x9d
 #define CURSOR_RIGHT 0x1d
+#define RETURN_KEY 0x0d
 #define NUMBER_OF_GEMS 7
 #define PETSCII_FOR_ZERO_CHAR 48
 #define RASTER_REGISTER_LO 0x9004
@@ -18,6 +19,8 @@ struct coordinate {
   char x;
   char y;
 };
+
+enum gamestate { no_selection, first_selection, second_selection };
 
 void initialize_display(void);
 void initialize_game_state(void);
@@ -37,13 +40,17 @@ void update_raster_rand(void);
 void randomize_playfield(void);
 
 char raster_rand;
+enum gamestate the_game_state;
 
 char playfield[PLAYFIELD_X][PLAYFIELD_Y];
 
 struct coordinate game_cursor;
+struct coordinate first_gem;
+struct coordinate second_gem;
 
 int main() {
 
+  the_game_state = no_selection;
   initialize_display();
   initialize_game_state();
   initialize_playfield();
@@ -81,6 +88,10 @@ void render_display() {
   gotoxy(0, PLAYFIELD_Y);
   textcolor( COLOR_WHITE );
   cprintf("x=%2d,y=%2d", game_cursor.x, game_cursor.y);
+  gotoxy(0, PLAYFIELD_Y + 1);
+  cprintf("x=%2d,y=%2d", first_gem.x, first_gem.y);
+  gotoxy(0, PLAYFIELD_Y + 2);
+  cprintf("x=%2d,y=%2d", second_gem.x, second_gem.y);
   gotoxy( game_cursor.x, game_cursor.y );
 }
 
@@ -101,6 +112,21 @@ void do_command(char command) {
   }
   else if ( command == CURSOR_RIGHT && game_cursor.x != PLAYFIELD_X - 1 ) {
     game_cursor.x++;
+  }
+  else if ( command == RETURN_KEY ) {
+    if ( the_game_state == no_selection ) {
+      first_gem.x = game_cursor.x;
+      first_gem.y = game_cursor.y;
+      the_game_state = first_selection;
+    }
+    else if ( the_game_state == first_selection ) {
+      second_gem.x = game_cursor.x;
+      second_gem.y = game_cursor.y;
+      the_game_state = second_selection;
+    }
+    else {
+      the_game_state = no_selection;
+    }
   }
 
   return;
