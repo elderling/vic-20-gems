@@ -38,6 +38,7 @@ char double_right_match( struct coordinate *gem_location, char gem );
 char gem_matches( struct coordinate *gem_location, char gem);
 void update_raster_rand(void);
 void randomize_playfield(void);
+void swap_gems( struct coordinate *from, struct coordinate *to );
 
 char raster_rand;
 enum gamestate the_game_state;
@@ -123,6 +124,7 @@ void do_command(char command) {
       second_gem.x = game_cursor.x;
       second_gem.y = game_cursor.y;
       the_game_state = second_selection;
+      swap_gems( &first_selection, &second_selection );
     }
     else {
       the_game_state = no_selection;
@@ -288,4 +290,14 @@ void randomize_playfield() {
       playfield[x][y] = potential_gem;
     }
   }
+}
+
+void swap_gems( struct coordinate *from, struct coordinate *to ) {
+  char temp;
+
+  temp = playfield[from->x][from->y];
+  playfield[from->x][from->y] = playfield[to->x][to->y];
+  playfield[to->x][to->y] = temp;
+
+  return;
 }
