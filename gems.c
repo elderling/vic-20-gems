@@ -39,6 +39,8 @@ char gem_matches( struct coordinate *gem_location, char gem);
 void update_raster_rand(void);
 void randomize_playfield(void);
 void swap_gems( struct coordinate *from, struct coordinate *to );
+char is_valid_swap( struct coordinate *from, struct coordinate *to );
+void notify_invalid (void);
 
 char raster_rand;
 enum gamestate the_game_state;
@@ -123,7 +125,12 @@ void do_command(char command) {
     else if ( the_game_state == second_selection ) {
       second_gem.x = game_cursor.x;
       second_gem.y = game_cursor.y;
-      swap_gems( &first_gem, &second_gem );
+      if ( is_valid_swap( &first_gem, &second_gem ) ) {
+        swap_gems( &first_gem, &second_gem );
+      }
+      else {
+        notify_invalid();
+      }
       the_game_state = first_selection;
     }
   }
@@ -296,5 +303,35 @@ void swap_gems( struct coordinate *from, struct coordinate *to ) {
   playfield[from->x][from->y] = playfield[to->x][to->y];
   playfield[to->x][to->y] = temp;
 
+  return;
+}
+
+char is_valid_swap( struct coordinate *from, struct coordinate *to ) {
+
+  if ( from->x == to->x && from->y == to->y ) {
+    return 0;
+  }
+
+  if ( from->x == to->x ) {
+    if ( to->y == from->y + 1 || to->y == from->y - 1 ) {
+      return 1;
+    }
+  }
+
+  if ( from->y == to->y ) {
+    if ( to->x == from->x + 1 || to->x == from->x - 1 ) {
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+void notify_invalid () {
+  bgcolor(COLOR_RED);
+
+  cgetc();
+
+  bgcolor(COLOR_BLACK);
   return;
 }
