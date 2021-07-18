@@ -20,7 +20,7 @@ struct coordinate {
   char y;
 };
 
-enum gamestate { no_selection, first_selection, second_selection };
+enum gamestate { first_selection, second_selection };
 
 void initialize_display(void);
 void initialize_game_state(void);
@@ -51,7 +51,7 @@ struct coordinate second_gem;
 
 int main() {
 
-  the_game_state = no_selection;
+  the_game_state = first_selection;
   initialize_display();
   initialize_game_state();
   initialize_playfield();
@@ -115,19 +115,16 @@ void do_command(char command) {
     game_cursor.x++;
   }
   else if ( command == RETURN_KEY ) {
-    if ( the_game_state == no_selection ) {
+    if ( the_game_state == first_selection ) {
       first_gem.x = game_cursor.x;
       first_gem.y = game_cursor.y;
-      the_game_state = first_selection;
+      the_game_state = second_selection;
     }
-    else if ( the_game_state == first_selection ) {
+    else if ( the_game_state == second_selection ) {
       second_gem.x = game_cursor.x;
       second_gem.y = game_cursor.y;
-      the_game_state = second_selection;
       swap_gems( &first_gem, &second_gem );
-    }
-    else {
-      the_game_state = no_selection;
+      the_game_state = first_selection;
     }
   }
 
