@@ -124,7 +124,7 @@ void do_command(char command) {
       second_gem.x = game_cursor.x;
       second_gem.y = game_cursor.y;
       the_game_state = second_selection;
-      swap_gems( &first_selection, &second_selection );
+      swap_gems( &first_gem, &second_gem );
     }
     else {
       the_game_state = no_selection;
