@@ -40,12 +40,15 @@ void update_raster_rand(void);
 void randomize_playfield(void);
 void swap_gems( struct coordinate *from, struct coordinate *to );
 char is_valid_swap( struct coordinate *from, struct coordinate *to );
-void notify_invalid (void);
+void notify_invalid( void );
+char populate_match_grid( void ); 
+void remove_gems( void );
 
 char raster_rand;
 enum gamestate the_game_state;
 
 char playfield[PLAYFIELD_X][PLAYFIELD_Y];
+char match_grid[PLAYFIELD_X][PLAYFIELD_Y];
 
 struct coordinate game_cursor;
 struct coordinate first_gem;
@@ -127,6 +130,14 @@ void do_command(char command) {
       second_gem.y = game_cursor.y;
       if ( is_valid_swap( &first_gem, &second_gem ) ) {
         swap_gems( &first_gem, &second_gem );
+        // TODO: Remove gems in a loop so that matches all get resolved
+        if ( populate_match_grid() ) {
+          remove_gems();
+        }
+        else {
+          swap_gems( &first_gem, &second_gem );
+          notify_invalid();
+        }
       }
       else {
         notify_invalid();
@@ -333,5 +344,54 @@ void notify_invalid () {
   cgetc();
 
   bgcolor(COLOR_BLACK);
+  return;
+}
+
+char populate_match_grid (void) {
+  char x, y, gem;
+  char found_matches = 0;
+
+  struct coordinate the_coordinate;
+
+  for (x = 0; x < PLAYFIELD_X; x++) {
+    for (y = 0; y < PLAYFIELD_Y; y++) {
+      gem = playfield[x][y];
+      if ( gem == EMPTY_SLOT ) { 
+        match_grid[x][y] = 0;
+        continue; 
+      }
+      the_coordinate.x = x;
+      the_coordinate.y = y;
+      if ( gem_matches( &the_coordinate, gem) ) {
+        found_matches = 1;
+        match_grid[x][y] = 1;
+      }
+      else {
+        match_grid[x][y] = 0;
+      }
+    }
+  }
+
+  return found_matches;
+}
+
+void remove_gems() {
+  signed char stack_top, x, y;
+
+  for ( x = 0; x < PLAYFIELD_X; x++ ) {
+    stack_top = PLAYFIELD_Y - 1;
+    for ( y = PLAYFIELD_Y - 1; y >= 0; y-- ) {
+      if ( match_grid[x][y] == 1 ) {
+        continue;
+      }
+      playfield[x][stack_top] = playfield[x][y];
+      stack_top--;
+    }
+
+    for ( y = stack_top; y >= 0; y-- ) {
+      playfield[x][y] = EMPTY_SLOT;
+    }
+  }
+
   return;
 }
