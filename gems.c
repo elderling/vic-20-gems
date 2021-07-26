@@ -106,6 +106,7 @@ char get_command() {
 }
 
 void do_command(char command) {
+  char removed_gems = 0;
 
   if ( command == CURSOR_UP && game_cursor.y != 0 ) {
     game_cursor.y--;
@@ -129,15 +130,19 @@ void do_command(char command) {
       second_gem.x = game_cursor.x;
       second_gem.y = game_cursor.y;
       if ( is_valid_swap( &first_gem, &second_gem ) ) {
+
         swap_gems( &first_gem, &second_gem );
-        // TODO: Remove gems in a loop so that matches all get resolved
-        if ( populate_match_grid() ) {
+
+        while ( populate_match_grid() ) {
           remove_gems();
+          removed_gems = 1;
         }
-        else {
+
+        if (!removed_gems) {
           swap_gems( &first_gem, &second_gem );
           notify_invalid();
         }
+
       }
       else {
         notify_invalid();
