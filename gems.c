@@ -54,6 +54,8 @@ struct coordinate game_cursor;
 struct coordinate first_gem;
 struct coordinate second_gem;
 
+unsigned int game_score = 0;
+
 int main() {
 
   the_game_state = first_selection;
@@ -91,13 +93,15 @@ void initialize_game_state() {
 
 void render_display() {
   draw_playfield();
-  gotoxy(0, PLAYFIELD_Y);
+  gotoxy(0, PLAYFIELD_Y + 1);
   textcolor( COLOR_WHITE );
   cprintf("x=%2d,y=%2d", game_cursor.x, game_cursor.y);
-  gotoxy(0, PLAYFIELD_Y + 1);
-  cprintf("x=%2d,y=%2d", first_gem.x, first_gem.y);
   gotoxy(0, PLAYFIELD_Y + 2);
+  cprintf("x=%2d,y=%2d", first_gem.x, first_gem.y);
+  gotoxy(0, PLAYFIELD_Y + 3);
   cprintf("x=%2d,y=%2d", second_gem.x, second_gem.y);
+  gotoxy(0, PLAYFIELD_Y + 4);
+  cprintf("score=%5d", game_score);
   gotoxy( game_cursor.x, game_cursor.y );
 }
 
@@ -107,6 +111,7 @@ char get_command() {
 
 void do_command(char command) {
   char removed_gems = 0;
+  char score = 0;
 
   if ( command == CURSOR_UP && game_cursor.y != 0 ) {
     game_cursor.y--;
@@ -133,7 +138,8 @@ void do_command(char command) {
 
         swap_gems( &first_gem, &second_gem );
 
-        while ( populate_match_grid() ) {
+        while ( score = populate_match_grid() ) {
+          game_score += score;
           remove_gems();
           removed_gems = 1;
         }
@@ -368,7 +374,7 @@ char populate_match_grid (void) {
       the_coordinate.x = x;
       the_coordinate.y = y;
       if ( gem_matches( &the_coordinate, gem) ) {
-        found_matches = 1;
+        found_matches++;
         match_grid[x][y] = 1;
       }
       else {
