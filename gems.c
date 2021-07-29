@@ -149,6 +149,8 @@ void do_command(char command) {
           notify_invalid();
         }
 
+        randomize_playfield();
+
       }
       else {
         notify_invalid();
