@@ -1,6 +1,7 @@
 #include <vic20.h>
 #include <conio.h>
 #include <peekpoke.h>
+#include <stdlib.h>
 
 #define EMPTY_SLOT 0
 #define PLAYFIELD_X 8
@@ -36,7 +37,6 @@ char double_up_match( struct coordinate *gem_location, char gem );
 char double_left_match( struct coordinate *gem_location, char gem );
 char double_right_match( struct coordinate *gem_location, char gem );
 char gem_matches( struct coordinate *gem_location, char gem);
-void update_raster_rand(void);
 void randomize_playfield(void);
 void swap_gems( struct coordinate *from, struct coordinate *to );
 char is_valid_swap( struct coordinate *from, struct coordinate *to );
@@ -44,7 +44,6 @@ void notify_invalid( void );
 char populate_match_grid( void );
 void remove_gems( void );
 
-char raster_rand;
 enum gamestate the_game_state;
 
 char playfield[PLAYFIELD_X][PLAYFIELD_Y];
@@ -59,6 +58,7 @@ unsigned int game_score = 0;
 int main()
 {
 
+    _randomize();
     the_game_state = first_selection;
     initialize_display();
     initialize_game_state();
@@ -106,6 +106,8 @@ void render_display()
     cprintf("x=%2d,y=%2d", second_gem.x, second_gem.y);
     gotoxy(0, PLAYFIELD_Y + 4);
     cprintf("score=%5d", game_score);
+    gotoxy(0, PLAYFIELD_Y + 5);
+    cprintf("score=%5d", RAND_MAX);
     gotoxy( game_cursor.x, game_cursor.y );
 }
 
@@ -301,11 +303,6 @@ char double_right_match( struct coordinate *gem_location, char gem)
     return 0;
 }
 
-void update_raster_rand()
-{
-    raster_rand = ((raster_rand >> 7) + raster_rand << 1) ^ PEEK(RASTER_REGISTER_LO);
-}
-
 void randomize_playfield()
 {
     char x,y;
@@ -316,8 +313,7 @@ void randomize_playfield()
             if (playfield[x][y] != EMPTY_SLOT ) {
                 continue;
             }
-            update_raster_rand();
-            potential_gem = START_CHAR + raster_rand % NUMBER_OF_GEMS;
+            potential_gem = START_CHAR + ((char) rand() % 256) % NUMBER_OF_GEMS;
             gem_location.x = x;
             gem_location.y = y;
             while ( gem_matches(&gem_location, potential_gem) ) {
