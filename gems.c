@@ -1,6 +1,4 @@
-#include <vic20.h>
 #include <conio.h>
-#include <peekpoke.h>
 #include <stdlib.h>
 #include <stdint.h>
 
@@ -108,8 +106,6 @@ void render_display()
     gotoxy(0, PLAYFIELD_Y + 4);
     cprintf("score=%5d", game_score);
     gotoxy(0, PLAYFIELD_Y + 5);
-    cprintf("score=%5d", RAND_MAX);
-    gotoxy( game_cursor.x, game_cursor.y );
 }
 
 uint8_t get_command()
