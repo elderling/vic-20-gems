@@ -15,10 +15,10 @@
 #define RASTER_REGISTER_LO 0x9004
 #define START_CHAR 1
 
-struct coordinate {
+typedef struct {
     uint8_t x;
     uint8_t y;
-};
+} GemE_Coordinate_t;
 
 enum gamestate { first_selection, second_selection };
 
@@ -29,16 +29,16 @@ void render_display(void);
 uint8_t get_command(void);
 void do_command(uint8_t command);
 void draw_playfield(void);
-uint8_t up_down_match( struct coordinate *gem_location, uint8_t gem );
-uint8_t left_right_match( struct coordinate *gem_location, uint8_t gem );
-uint8_t double_down_match( struct coordinate *gem_location, uint8_t gem );
-uint8_t double_up_match( struct coordinate *gem_location, uint8_t gem );
-uint8_t double_left_match( struct coordinate *gem_location, uint8_t gem );
-uint8_t double_right_match( struct coordinate *gem_location, uint8_t gem );
-uint8_t gem_matches( struct coordinate *gem_location, uint8_t gem);
+uint8_t up_down_match( GemE_Coordinate_t *gem_location, uint8_t gem );
+uint8_t left_right_match( GemE_Coordinate_t *gem_location, uint8_t gem );
+uint8_t double_down_match( GemE_Coordinate_t *gem_location, uint8_t gem );
+uint8_t double_up_match( GemE_Coordinate_t *gem_location, uint8_t gem );
+uint8_t double_left_match( GemE_Coordinate_t *gem_location, uint8_t gem );
+uint8_t double_right_match( GemE_Coordinate_t *gem_location, uint8_t gem );
+uint8_t gem_matches( GemE_Coordinate_t *gem_location, uint8_t gem);
 void randomize_playfield(void);
-void swap_gems( struct coordinate *from, struct coordinate *to );
-uint8_t is_valid_swap( struct coordinate *from, struct coordinate *to );
+void swap_gems( GemE_Coordinate_t *from, GemE_Coordinate_t *to );
+uint8_t is_valid_swap( GemE_Coordinate_t *from, GemE_Coordinate_t *to );
 void notify_invalid( void );
 uint8_t populate_match_grid( void );
 void remove_gems( void );
@@ -48,9 +48,9 @@ enum gamestate the_game_state;
 uint8_t playfield[PLAYFIELD_X][PLAYFIELD_Y];
 uint8_t match_grid[PLAYFIELD_X][PLAYFIELD_Y];
 
-struct coordinate game_cursor;
-struct coordinate first_gem;
-struct coordinate second_gem;
+GemE_Coordinate_t game_cursor;
+GemE_Coordinate_t first_gem;
+GemE_Coordinate_t second_gem;
 
 uint16_t game_score = 0;
 
@@ -184,7 +184,7 @@ void draw_playfield()
     }
 }
 
-uint8_t gem_matches( struct coordinate *gem_location, uint8_t gem)
+uint8_t gem_matches( GemE_Coordinate_t *gem_location, uint8_t gem)
 {
     if ( up_down_match( gem_location, gem) ) {
         return 1;
@@ -210,7 +210,7 @@ uint8_t gem_matches( struct coordinate *gem_location, uint8_t gem)
     return 0;
 }
 
-uint8_t up_down_match( struct coordinate *gem_location, uint8_t gem )
+uint8_t up_down_match( GemE_Coordinate_t *gem_location, uint8_t gem )
 {
     uint8_t x = gem_location->x;
     uint8_t y = gem_location->y;
@@ -224,7 +224,7 @@ uint8_t up_down_match( struct coordinate *gem_location, uint8_t gem )
     return 0;
 }
 
-uint8_t left_right_match( struct coordinate *gem_location, uint8_t gem)
+uint8_t left_right_match( GemE_Coordinate_t *gem_location, uint8_t gem)
 {
     uint8_t x = gem_location->x;
     uint8_t y = gem_location->y;
@@ -239,7 +239,7 @@ uint8_t left_right_match( struct coordinate *gem_location, uint8_t gem)
     return 0;
 }
 
-uint8_t double_up_match( struct coordinate *gem_location, uint8_t gem)
+uint8_t double_up_match( GemE_Coordinate_t *gem_location, uint8_t gem)
 {
     uint8_t x = gem_location->x;
     uint8_t y = gem_location->y;
@@ -254,7 +254,7 @@ uint8_t double_up_match( struct coordinate *gem_location, uint8_t gem)
     return 0;
 }
 
-uint8_t double_down_match( struct coordinate *gem_location, uint8_t gem )
+uint8_t double_down_match( GemE_Coordinate_t *gem_location, uint8_t gem )
 {
     uint8_t x = gem_location->x;
     uint8_t y = gem_location->y;
@@ -270,7 +270,7 @@ uint8_t double_down_match( struct coordinate *gem_location, uint8_t gem )
     return 0;
 }
 
-uint8_t double_left_match( struct coordinate *gem_location, uint8_t gem)
+uint8_t double_left_match( GemE_Coordinate_t *gem_location, uint8_t gem)
 {
     uint8_t x = gem_location->x;
     uint8_t y = gem_location->y;
@@ -285,7 +285,7 @@ uint8_t double_left_match( struct coordinate *gem_location, uint8_t gem)
     return 0;
 }
 
-uint8_t double_right_match( struct coordinate *gem_location, uint8_t gem)
+uint8_t double_right_match( GemE_Coordinate_t *gem_location, uint8_t gem)
 {
     uint8_t x = gem_location->x;
     uint8_t y = gem_location->y;
@@ -305,7 +305,7 @@ void randomize_playfield()
 {
     uint8_t x,y;
     uint8_t potential_gem;
-    struct coordinate gem_location;
+    GemE_Coordinate_t gem_location;
     for (x = 0; x < PLAYFIELD_X; x++) {
         for (y = 0; y < PLAYFIELD_Y; y++) {
             if (playfield[x][y] != EMPTY_SLOT ) {
@@ -325,7 +325,7 @@ void randomize_playfield()
     }
 }
 
-void swap_gems( struct coordinate *from, struct coordinate *to )
+void swap_gems( GemE_Coordinate_t *from, GemE_Coordinate_t *to )
 {
     uint8_t temp;
 
@@ -336,7 +336,7 @@ void swap_gems( struct coordinate *from, struct coordinate *to )
     return;
 }
 
-uint8_t is_valid_swap( struct coordinate *from, struct coordinate *to )
+uint8_t is_valid_swap( GemE_Coordinate_t *from, GemE_Coordinate_t *to )
 {
 
     if ( from->x == to->x && from->y == to->y ) {
@@ -373,7 +373,7 @@ uint8_t populate_match_grid (void)
     uint8_t x, y, gem;
     uint8_t found_matches = 0;
 
-    struct coordinate the_coordinate;
+    GemE_Coordinate_t the_coordinate;
 
     for (x = 0; x < PLAYFIELD_X; x++) {
         for (y = 0; y < PLAYFIELD_Y; y++) {
