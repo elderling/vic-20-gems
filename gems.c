@@ -12,7 +12,6 @@
 #define RETURN_KEY 0x0d
 #define NUMBER_OF_GEMS 7
 #define PETSCII_FOR_ZERO_CHAR 48
-#define RASTER_REGISTER_LO 0x9004
 #define START_CHAR 1
 
 typedef struct {
