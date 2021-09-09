@@ -14,6 +14,8 @@
 #define PETSCII_FOR_ZERO_CHAR 48
 #define START_CHAR 1
 
+typedef enum GemE_Command_t{ CursorUp = 0x91, CursorDown = 0x11, CursorRight = 0x1d, CursorLeft = 0x9d, SelectGem = 0x0d } GemE_Command_t;
+
 typedef struct {
     uint8_t x;
     uint8_t y;
@@ -25,8 +27,8 @@ void initialize_display(void);
 void initialize_game_state(void);
 void initialize_playfield(void);
 void render_display(void);
-uint8_t get_command(void);
-void do_command(uint8_t command);
+GemE_Command_t get_command(void);
+void do_command(GemE_Command_t command);
 void draw_playfield(void);
 uint8_t up_down_match( GemE_Coordinate_t *gem_location, uint8_t gem );
 uint8_t left_right_match( GemE_Coordinate_t *gem_location, uint8_t gem );
@@ -108,25 +110,25 @@ void render_display()
     gotoxy( game_cursor.x, game_cursor.y );
 }
 
-uint8_t get_command()
+GemE_Command_t get_command()
 {
-    return cgetc();
+    return (GemE_Command_t) cgetc();
 }
 
-void do_command(uint8_t command)
+void do_command(GemE_Command_t command)
 {
     uint8_t removed_gems = 0;
     uint8_t score = 0;
 
-    if ( command == CURSOR_UP && game_cursor.y != 0 ) {
+    if ( command == CursorUp && game_cursor.y != 0 ) {
         game_cursor.y--;
-    } else if ( command == CURSOR_DOWN && game_cursor.y != PLAYFIELD_Y - 1) {
+    } else if ( command == CursorDown && game_cursor.y != PLAYFIELD_Y - 1) {
         game_cursor.y++;
-    } else if ( command == CURSOR_LEFT && game_cursor.x != 0 ) {
+    } else if ( command == CursorLeft && game_cursor.x != 0 ) {
         game_cursor.x--;
-    } else if ( command == CURSOR_RIGHT && game_cursor.x != PLAYFIELD_X - 1 ) {
+    } else if ( command == CursorRight && game_cursor.x != PLAYFIELD_X - 1 ) {
         game_cursor.x++;
-    } else if ( command == RETURN_KEY ) {
+    } else if ( command == SelectGem ) {
         if ( the_game_state == first_selection ) {
             first_gem.x = game_cursor.x;
             first_gem.y = game_cursor.y;
